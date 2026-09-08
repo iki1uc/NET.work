@@ -1,1 +1,15 @@
+// ================================================================
+//  api.atom.raid/workquad.ready
+//  ATOM-Quad-Ready: Zeit · Ort · Home · Quad · Atom
+// ================================================================
+
+export function workQuadReady() {
+  return {
+    time: Date.now(),          // Zeitstempel
+    ort: location.hash || '',  // aktueller Stage-Ort
+    home: 'ROOT',              // Grundzustand
+    quad: true,                // Quad-Ready-Signal
+    atom: 'ACTIVE'             // Atom-Level-Status
+  };
+}
 

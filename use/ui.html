@@ -1,8 +1,15 @@
-<script type="module">
-    import { VEC3_81 } from "./vec3.js";
+// USER_READY — erzeugt ein TMP-geführtes User-Atom
 
-    window.onload = () => {
-        const out = document.getElementById("output");
-        out.innerHTML = VEC3_81.map(v => v.toString()).join("<br>");
+export function USER_READY(name = "unknown-user"){
+
+    return {
+        id: crypto.randomUUID(),
+        user: name,
+        status: "READY",
+        axis: 9,
+        contact: "TP9",
+        time: Date.now(),
+        legal: "EU-DSGVO",
+        atom: "USER"
     };
-</script>
+}

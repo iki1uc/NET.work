@@ -1,5 +1,25 @@
-if(READY){
-    const net = makeNET_TMP();
-    const vec = makeVEC3_TMP();
-}
+if (READY) {
 
+    const net = makeNET_TMP();     // dein Netzwerk-Atom
+    const vec3 = makeVEC3_TMP();   // dein 3D-Atom
+    const vec9 = makeVEC9_TMP();   // dein 9D-Atom (729 Slots)
+    const mode = qMode();          // TP12/TP9/TP3/TP4
+
+    return {
+        id: crypto.randomUUID(),
+        status: "READY",
+        axis: 9,
+        contact: "TP9",
+        time: Date.now(),
+        legal: "EU-DSGVO",
+
+        net,
+        vec3,
+        vec9,
+        mode,
+
+        atom: "USE",
+        synergy: true,
+        vitality: 27
+    };
+}

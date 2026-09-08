@@ -1,11 +1,78 @@
-export const RUN3 = {
-    mode: "TMP",
-    legal: "EU-DSGVO",
-    anon: true,
-    persist: false,
-    vec: "ready",
-    net: "NET_TMP",
-    lan: "neutral",
-    wlan: "neutral",
-    trigger: "use.ready"
-};
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>ALLXALL · Light</title>
+
+<style>
+  body { background:#000; color:#0f0; font-family:Consolas; padding:20px; }
+  h1 { color:#6cf; }
+  .opt {
+    padding:10px; margin:10px 0; background:#111; border:1px solid #333;
+    cursor:pointer;
+  }
+  .opt:hover { background:#222; }
+</style>
+
+<script type="module">
+
+// 6 Optionen (axiomisch)
+const OPTIONS = [
+  "Sonne",
+  "Orbit",
+  "DS9",
+  "Triangle",
+  "Matrix",
+  "Engine"
+];
+
+// TMP‑Objekt erzeugen (NC‑rein)
+function makeTMP(opt){
+    return {
+        id: crypto.randomUUID(),   // anonym, nicht rückverfolgbar
+        choice: opt,               // Auswahl
+        time: Date.now(),          // TMP‑Zeitpunkt
+        legal: "EU-DSGVO",         // Legitimation
+        origin: "local"            // keine Netzwerkdaten
+    };
+}
+
+// Auswahl speichern (TMP)
+function choose(opt){
+    const TMP = makeTMP(opt);
+    localStorage.setItem("ALLXALL_LIGHT", JSON.stringify(TMP));
+    alert("Gebucht: " + opt);
+}
+
+// Auswahl löschen (TMP)
+function cancel(){
+    localStorage.removeItem("ALLXALL_LIGHT");
+    alert("Storniert");
+}
+
+</script>
+
+</head>
+
+<body>
+
+<h1>ALLXALL · Light</h1>
+
+<div id="list"></div>
+
+<script>
+// Liste erzeugen
+OPTIONS.forEach(opt => {
+    const div = document.createElement("div");
+    div.className = "opt";
+    div.innerHTML = `
+        <b>${opt}</b><br>
+        <button onclick="choose('${opt}')">buchen</button>
+        <button onclick="cancel()">stornieren</button>
+    `;
+    document.getElementById("list").appendChild(div);
+});
+</script>
+
+</body>
+</html>

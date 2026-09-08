@@ -1,7 +1,18 @@
-        TP12
-    TP9       TP12
+// q.mode — TMP-geführtes Achsenmodul
 
- TP6     9     TP8
+export function qMode(){
+    return {
+        id: crypto.randomUUID(),   // anonym, EU-legal
 
-    TP4       TP3
-        TP9
+        mode: "RUN3",              // TP12 oben
+        axis: 9,                   // TP9 oben
+        vec: "VEC9",               // TP6 / TP8
+
+        contact: "TP9",            // TP9 unten (NEU)
+        home: "NC",                // TP3
+        ort: "NC",                 // TP4
+
+        time: Date.now(),          // TMP
+        legal: "EU-DSGVO"
+    };
+}

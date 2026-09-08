@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>ALL · ID · Master-Sortierer · Segment-Matrix 6.0</title>
+<title>ID · Segment · 9×9 · TMP</title>
 
 <style>
   body {
@@ -13,20 +13,13 @@
     text-align:center;
   }
 
-  #iki1uc-id.segment-matrix {
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:20px;
-    width:90%;
-    margin:auto;
-  }
-
   .seg {
     border:1px solid #0f0;
     padding:20px;
     background:#111;
-    font-size:18px;
-    line-height:1.6;
+    font-size:20px;
+    width:60%;
+    margin:auto;
   }
 
   .seg[data-type]::before {
@@ -35,50 +28,60 @@
     font-weight:bold;
   }
 </style>
+
+<script type="module">
+
+// Alle Segmente (TP‑Pyramide)
+const SEGMENTS = {
+  HY:  "◉ → 3 → 9 → ◎ → 81 → 3 ↺",
+  PE:  "◉ → 9 → ◎ → 81 → ◆ → △ → ▣",
+  PER: "3 → 9 → 81 → ◆ → 756 → △ → 27 → ▣ → 3",
+  TRANS: "◎ → 81 → ◆ → △",
+  WARB:  "81 → ◆ → △ → 27",
+  KANAL: "756 → △ → 27 → ▣",
+  "TMP-alpha": "3 → ◎ → 27",
+  "TMP-beta":  "9 → 81 → ▣",
+  "TMP-gamma": "◆ → 756 → △"
+};
+
+// EIN Segment laden (TMP)
+function loadSegment(type){
+    const TMP = {
+        id: crypto.randomUUID(),   // anonym
+        type,
+        value: SEGMENTS[type],
+        time: Date.now(),
+        legal: "EU-DSGVO"
+    };
+
+    localStorage.setItem("ID_SEGMENT", JSON.stringify(TMP));
+
+    document.getElementById("seg").setAttribute("data-type", type);
+    document.getElementById("seg").innerText = TMP.value;
+}
+
+</script>
 </head>
 
 <body>
 
-<h1>ALL · ID · Master-Sortierer · Segment-Matrix 6.0</h1>
+<h1>ID · Segment · 9×9 · TMP</h1>
 
-<div id="iki1uc-id" class="segment-matrix">
+<select onchange="loadSegment(this.value)">
+  <option value="">Segment wählen…</option>
+  <option value="HY">HY</option>
+  <option value="PE">PE</option>
+  <option value="PER">PER</option>
+  <option value="TRANS">TRANS</option>
+  <option value="WARB">WARB</option>
+  <option value="KANAL">KANAL</option>
+  <option value="TMP-alpha">TMP-alpha</option>
+  <option value="TMP-beta">TMP-beta</option>
+  <option value="TMP-gamma">TMP-gamma</option>
+</select>
 
-  <div class="seg" data-type="HY">
-    ◉ → 3 → 9 → ◎ → 81 → 3 ↺
-  </div>
-
-  <div class="seg" data-type="PE">
-    ◉ → 9 → ◎ → 81 → ◆ → △ → ▣
-  </div>
-
-  <div class="seg" data-type="PER">
-    3 → 9 → 81 → ◆ → 756 → △ → 27 → ▣ → 3
-  </div>
-
-  <div class="seg" data-type="TRANS">
-    ◎ → 81 → ◆ → △
-  </div>
-
-  <div class="seg" data-type="WARB">
-    81 → ◆ → △ → 27
-  </div>
-
-  <div class="seg" data-type="KANAL">
-    756 → △ → 27 → ▣
-  </div>
-
-  <div class="seg" data-type="TMP-alpha">
-    3 → ◎ → 27
-  </div>
-
-  <div class="seg" data-type="TMP-beta">
-    9 → 81 → ▣
-  </div>
-
-  <div class="seg" data-type="TMP-gamma">
-    ◆ → 756 → △
-  </div>
-
+<div id="seg" class="seg" data-type="NONE">
+  Kein Segment geladen.
 </div>
 
 </body>

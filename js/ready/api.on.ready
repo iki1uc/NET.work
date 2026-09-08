@@ -1,1 +1,20 @@
+// api.on.ready — wird ausgeführt, wenn alle API-Module geladen sind
+
+import { kernel } from '../OS_CORE.js';
+import { ATOM } from '../atom.js';
+import { MODULES } from '../axiom.map.js';
+
+// API ist bereit
+kernel.set("apiReady", true);
+
+// Atom-System verfügbar machen
+kernel.set("atom", ATOM);
+
+// Module registrieren
+kernel.set("modules", MODULES);
+
+// Optional: API-spezifische Hooks
+kernel.set("apiTimestamp", kernel.clock.elapsed);
+
+console.log("API READY:", kernel.get("apiReady"));
 

@@ -1,1 +1,19 @@
+// main.ready — wird ausgeführt, wenn alles geladen ist
+
+import { kernel } from '../OS_CORE.js';
+import { ATOM } from '../atom.js';
+import { Clock } from '../NC_time.js';
+import { gridPoints } from '../NC_space.js';
+import { MODULES } from '../axiom.map.js';
+
+kernel.set("boot", "ready");
+kernel.set("atom", ATOM);
+
+kernel.clock = new Clock();
+kernel.set("mesh", gridPoints(9, 9, 26));
+
+kernel.set("modules", MODULES);
+kernel.set("respoReady", true);
+
+console.log("System READY:", kernel);
 

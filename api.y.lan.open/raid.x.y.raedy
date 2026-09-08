@@ -1,1 +1,14 @@
+// ================================================================
+//  api.y.lan.open/raid.x.y.raedy
+//  Stage-Ready: liefert Zeit, Ort, Home.
+//  Kein RAID, kein SLI, kein Verbund – nur ein Ready-Signal.
+// ================================================================
+
+export function stageReady() {
+  return {
+    time: Date.now(),          // Zeitstempel
+    ort: location.hash || '',  // aktueller Stage-Ort
+    home: 'ROOT',              // Grundzustand
+  };
+}
 

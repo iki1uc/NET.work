@@ -24,3 +24,17 @@ export function diamondPoints(size = 1) {
     back:   new Vec3(0, 0, -size * 0.7),
   };
 }
+export function diamondPoints(size = 1) {
+  const g = size * ATOM.subAtom.level;
+  const y = size * ATOM.microAtom.level;
+  const r = size * ATOM.nanoAtom.level;
+
+  return {
+    top:    new Vec3(0,  g, 0),
+    bottom: new Vec3(0, -g, 0),
+    right:  new Vec3( y * 0.7, 0, 0),
+    left:   new Vec3(-y * 0.7, 0, 0),
+    front:  new Vec3(0, 0,  r * 0.7),
+    back:   new Vec3(0, 0, -r * 0.7),
+  };
+}

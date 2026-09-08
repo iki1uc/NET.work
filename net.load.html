@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>NET.load · Loader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CORE -->
+  <script src="OS_CORE.js"></script>
+  <script src="axiom.map.js"></script>
+
+  <!-- NC-AXIS -->
+  <script src="NC_figur.js"></script>
+  <script src="NC_kraft.js"></script>
+  <script src="NC_space.js"></script>
+  <script src="NC_time.js"></script>
+
+  <!-- GEOMETRY -->
+  <script src="coord.js"></script>
+  <script src="dreieck.js"></script>
+  <script src="vec.js"></script>
+  <script src="vec3.js"></script>
+  <script src="vec9.js"></script>
+
+  <!-- FLOW -->
+  <script src="resolver.js"></script>
+  <script src="router.js"></script>
+  <script src="respo.js"></script>
+  <script src="respo-master.js"></script>
+
+  <!-- DOMAIN -->
+  <script src="MOVE.html"></script>
+  <script src="koop.html"></script>
+  <script src="wetter.html"></script>
+  <script src="soccer.html"></script>
+
+  <!-- USER -->
+  <script src="ID.html"></script>
+  <script src="user.html"></script>
+  <script src="use.html"></script>
+
+  <!-- ZOLL -->
+  <script src="zoll.html"></script>
+
+  <style>
+    body { background:#0a0a12; color:#e8edf5; font-family:Inter, sans-serif; padding:40px; }
+    .ok { padding:20px; border:1px solid #333; border-radius:12px; background:#131a24; }
+  </style>
+</head>
+
+<body>
+  <div class="ok">
+    <h2>NET.load</h2>
+    <p>Alle Module geladen.</p>
+    <p>NET.work ist bereit.</p>
+  </div>
+
+<script>
+  // NET.load → verbindet alles
+  const NET = {
+    core: OS_CORE,
+    axiom: AXIOM,
+    nc: {
+      figur: NC_figur,
+      kraft: NC_kraft,
+      space: NC_space,
+      time: NC_time
+    },
+    geo: { coord, dreieck, vec, vec3, vec9 },
+    flow: { resolver, router, respo },
+    domain: { MOVE, KOOP, WETTER, SOCCER },
+    user: { ID, USER, USE },
+    zoll: ZOLL,
+
+    ready() {
+      console.log("NET.ready → OK");
+      document.body.innerHTML += "<p style='color:#2ed98c'>NET.ready()</p>";
+    }
+  };
+
+  NET.ready();
+</script>
+
+</body>
+</html>

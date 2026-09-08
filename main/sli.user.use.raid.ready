@@ -1,0 +1,32 @@
+// main/sli.user.use.raid.ready — 4-Ebenen-Borg-Anker
+
+import { USER_READY } from "../user/user.ready.js";
+import { USE_READY } from "../use/use.ready.js";
+import { VEC3_TMP } from "../use/vec3.js";
+import { VEC9_TMP } from "../use/vec9.js";
+
+export function SLI_USER_USE_RAID_READY(name = "SLI-USER-USE-RAID") {
+
+    return {
+        id: crypto.randomUUID(),     // anonym, EU-legal
+        atom: "SLI.USER.USE.RAID",
+        name,
+
+        status: "READY",
+        axis: 9,                     // TP9 oben
+        contact: "TP9",              // TP9 unten
+        time: Date.now(),            // TMP
+        legal: "EU-DSGVO",
+
+        // 4 Ebenen synchronisiert
+        sli: VEC3_TMP("HY"),         // Screen-Layer Atom
+        user: USER_READY("iki1uc"),  // User-Atom
+        use: USE_READY("NET.work"),  // Use-Atom
+        raid: VEC9_TMP(81),          // RAID-Atom (9D)
+
+        vitality: 81,                // 9×9 Tiefe aktiv
+        synergy: true,               // Continuum aktiv
+        continuum: true              // Borg-Anker aktiv
+    };
+}
+

@@ -1,1 +1,20 @@
 
+// OUT_READY — TMP-geführtes Atom-Status-Modul
+
+export function OUT_READY(moduleName = "unknown") {
+
+    const atom = {
+        id: crypto.randomUUID(),     // anonym, EU-legal
+        module: moduleName,          // Name des Moduls
+        status: "READY",             // Zustand
+        axis: 9,                     // 9-Achse = Ready
+        time: Date.now(),            // TMP-Zeitpunkt
+        legal: "EU-DSGVO",           // Legitimation
+        flow: "entry-flow",          // READY-Flow
+        atomType: "segment",         // Teil-Atom
+        vitality: 27,                // 27 = Tiefe aktiv
+        synergy: true                // kompatibel mit NET.work
+    };
+
+    return atom;
+}

@@ -1,0 +1,30 @@
+// main/sli.router.ready — Borg-Anker für Stage-Router
+
+import { USER_READY } from "../user/user.ready.js";
+import { USE_READY } from "../use/use.ready.js";
+import { VEC3_TMP } from "../use/vec3.js";
+import { VEC9_TMP } from "../use/vec9.js";
+
+export function SLI_ROUTER_READY(route = "root") {
+
+    return {
+        id: crypto.randomUUID(),
+        atom: "SLI.ROUTER",
+        route,
+
+        status: "READY",
+        axis: 9,
+        contact: "TP9",
+        time: Date.now(),
+        legal: "EU-DSGVO",
+
+        sli: VEC3_TMP("HY"),
+        user: USER_READY("iki1uc"),
+        use: USE_READY("NET.work"),
+        raid: VEC9_TMP(81),
+
+        vitality: 81,
+        synergy: true,
+        continuum: true
+    };
+}

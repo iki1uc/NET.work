@@ -5,7 +5,11 @@
 // ================================================================
 
 export class Vec3 {
-  constructor(x = 0, y = 0, z = 0) { this.x = x; this.y = y; this.z = z; }
+  constructor(x = 0, y = 0, z = 0) { 
+    this.x = x; 
+    this.y = y; 
+    this.z = z; 
+  }
 
   add(v) { return new Vec3(this.x + v.x, this.y + v.y, this.z + v.z); }
   sub(v) { return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z); }

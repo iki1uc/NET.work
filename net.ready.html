@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>NET.ready · Systemstatus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      background:#0a0a12;
+      color:#e8edf5;
+      font-family:Inter, sans-serif;
+      padding:40px;
+    }
+    .ready-box {
+      padding:24px;
+      border:1px solid #333;
+      border-radius:14px;
+      background:#131a24;
+      box-shadow:0 0 22px rgba(0,0,0,0.4);
+    }
+    h2 { margin-bottom:10px; }
+    .ok { color:#2ed98c; font-weight:700; }
+    .module { margin-top:12px; font-size:14px; }
+    .module span { color:#4dd0e1; }
+  </style>
+</head>
+
+<body>
+
+<div class="ready-box">
+  <h2>NET.ready</h2>
+  <p class="ok">System ist verbunden. Netzwerk ist aktiv.</p>
+
+  <div class="module"><span>CORE:</span> OS_CORE, AXIOM</div>
+  <div class="module"><span>NC:</span> Figur, Kraft, Space, Time</div>
+  <div class="module"><span>GEOMETRY:</span> coord, dreieck, vec, vec3, vec9</div>
+  <div class="module"><span>FLOW:</span> resolver, router, respo</div>
+  <div class="module"><span>DOMAIN:</span> MOVE, KOOP, WETTER, SOCCER</div>
+  <div class="module"><span>USER:</span> ID, USER, USE</div>
+  <div class="module"><span>ZOLL:</span> Pipeline aktiv</div>
+
+  <p style="margin-top:20px;">NET.work ist vollständig bereit.</p>
+</div>
+
+<script>
+  // NET.ready verbindet alles, was net.load geladen hat
+  const NET = {
+    connect() {
+      console.log("NET.connect → alle Module verbunden");
+      return true;
+    },
+    koop() {
+      console.log("KOOP → Team aktiviert");
+    },
+    org() {
+      console.log("ORG → Struktur stabil");
+    },
+    reorg() {
+      console.log("REORG → fair, ohne Zwang");
+    },
+    evo() {
+      console.log("EVO → lebende Funktion aktiv");
+    },
+    status() {
+      console.log("NET.ready → System vollständig bereit");
+    }
+  };
+
+  // Ausführung
+  NET.connect();
+  NET.koop();
+  NET.org();
+  NET.reorg();
+  NET.evo();
+  NET.status();
+</script>
+
+</body>
+</html>

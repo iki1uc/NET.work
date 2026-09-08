@@ -1,72 +1,56 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>ALLXALL · Light</title>
+// use/vec.js — Zentrales Vektor-Modul für NET.work
 
-<style>
-  body { background:#000; color:#0f0; font-family:Consolas; padding:20px; }
-  h1 { color:#6cf; }
-  .opt {
-    padding:10px; margin:10px 0; background:#111; border:1px solid #333;
-    cursor:pointer;
-  }
-  .opt:hover { background:#222; }
-</style>
+// === 3D-Vektor-Klasse ===========================================
+export class Vec3 {
+    constructor(x = 0, y = 0, z = 0) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
-<script type="module">
+    magnitude() {
+        return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+    }
 
-// 6 Optionen (axiomisch)
-const OPTIONS = [
-  "Sonne",
-  "Orbit",
-  "DS9",
-  "Triangle",
-  "Matrix",
-  "Engine"
-];
+    add(v) {
+        return new Vec3(this.x + v.x, this.y + v.y, this.z + v.z);
+    }
 
-// Auswahl speichern
-function choose(opt){
-    const vec = {
-        XI: opt,
-        IX: opt,
-        x4: opt
+    sub(v) {
+        return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
+    }
+
+    scale(s) {
+        return new Vec3(this.x * s, this.y * s, this.z * s);
+    }
+
+    toComplex() {
+        return `${this.x} + ${this.y}i + ${this.z}j`;
+    }
+
+    toString() {
+        return `(${this.x}, ${this.y}, ${this.z})`;
+    }
+}
+
+// === Beispiel-Vektoren (3→9→81 kompatibel) ======================
+export const VEC3_CORE = {
+    HY:  new Vec3(3, 9, 81),
+    PE:  new Vec3(9, 81, 756),
+    PER: new Vec3(3, 9, 756),
+    TMP: new Vec3(27, 81, 3)
+};
+
+// === TMP-geführtes 3D-Atom ======================================
+export function VEC3_TMP(type = "HY") {
+    return {
+        id: crypto.randomUUID(),     // anonym, EU-legal
+        axis: 3,                     // 3D-Achse
+        vec: VEC3_CORE[type],        // HY, PE, PER, TMP
+        time: Date.now(),            // TMP
+        legal: "EU-DSGVO",
+        atom: "VEC3",
+        vitality: 9,                 // Clock aktiv
+        synergy: true
     };
-
-    localStorage.setItem("ALLXALL_LIGHT", JSON.stringify(vec));
-    alert("Gebucht: " + opt);
 }
-
-// Stornieren
-function cancel(opt){
-    localStorage.removeItem("ALLXALL_LIGHT");
-    alert("Storniert: " + opt);
-}
-
-</script>
-
-</head>
-
-<body>
-
-<h1>ALLXALL · Light</h1>
-
-<div id="list"></div>
-
-<script>
-// Liste erzeugen
-OPTIONS.forEach(opt => {
-    const div = document.createElement("div");
-    div.className = "opt";
-    div.innerHTML = `
-        <b>${opt}</b><br>
-        <button onclick="choose('${opt}')">buchen</button>
-        <button onclick="cancel('${opt}')">stornieren</button>
-    `;
-    document.getElementById("list").appendChild(div);
-});
-</script>
-
-</body>
-</html>

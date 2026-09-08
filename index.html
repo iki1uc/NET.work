@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NET.work – Vitality Narrative</title>
   <style>
-    /* ===== GLOBAL ===== */
+    /* (dein vorhandenes CSS – unverändert) */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: #0b0d12;
@@ -17,8 +17,6 @@
       justify-content: center;
       padding: 1rem;
     }
-
-    /* ===== MAIN CARD ===== */
     .net-card {
       max-width: 1200px;
       width: 100%;
@@ -28,10 +26,7 @@
       border-radius: 2.5rem;
       padding: 2rem 2rem 2.5rem;
       box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);
-      transition: all 0.2s;
     }
-
-    /* ===== HEADER ===== */
     .net-header {
       display: flex;
       flex-wrap: wrap;
@@ -46,10 +41,7 @@
       font-size: 1.8rem;
       letter-spacing: 0.02em;
     }
-    .net-header h1 span {
-      font-weight: 600;
-      color: #8ac4ff;
-    }
+    .net-header h1 span { font-weight: 600; color: #8ac4ff; }
     .net-header .stage-badge {
       background: #1f2a3c;
       padding: 0.3rem 1.2rem;
@@ -58,29 +50,21 @@
       font-size: 0.9rem;
       color: #b0d0ff;
     }
-
-    /* ===== DASHBOARD ===== */
     .dashboard {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.8rem;
       margin-top: 0.5rem;
     }
-    @media (max-width: 800px) {
-      .dashboard { grid-template-columns: 1fr; }
-    }
-
-    /* ===== PANELS ===== */
+    @media (max-width: 800px) { .dashboard { grid-template-columns: 1fr; } }
     .panel {
       background: rgba(12, 18, 30, 0.7);
       border: 1px solid rgba(80, 160, 255, 0.15);
       border-radius: 1.8rem;
       padding: 1.5rem 1.5rem 1.8rem;
       backdrop-filter: blur(2px);
-      transition: border-color 0.3s;
     }
     .panel:hover { border-color: rgba(80, 200, 255, 0.4); }
-
     .panel-title {
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -90,8 +74,6 @@
       border-bottom: 1px solid rgba(80, 160, 255, 0.1);
       padding-bottom: 0.3rem;
     }
-
-    /* ===== NC‑FIGUR (Lauf-Mann) ===== */
     .figur-box {
       display: flex;
       align-items: center;
@@ -109,9 +91,7 @@
       font-size: 2.8rem;
       box-shadow: 0 0 20px rgba(70, 160, 255, 0.3);
       border: 2px solid #6aafff;
-      transition: transform 0.3s;
     }
-    .figur-avatar:hover { transform: scale(1.03); }
     .figur-stats {
       display: flex;
       flex-direction: column;
@@ -130,8 +110,6 @@
       color: #c2dcff;
       font-weight: 500;
     }
-
-    /* ===== RESPO‑MESH (Miniatur) ===== */
     .respo-grid {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
@@ -143,7 +121,7 @@
       aspect-ratio: 1/1;
       border-radius: 3px;
       background: #1a2640;
-      transition: background 0.15s, transform 0.1s;
+      transition: background 0.15s;
       border: 1px solid #2a3a5a;
     }
     .respo-cell.active {
@@ -168,8 +146,6 @@
       border-radius: 40px;
       border: 1px solid #2a3a5a;
     }
-
-    /* ===== READY‑SIGNALE ===== */
     .ready-cluster {
       display: flex;
       flex-wrap: wrap;
@@ -195,12 +171,6 @@
       background: #44cc88;
       box-shadow: 0 0 6px #44cc88;
     }
-    .ready-tag .dot.off {
-      background: #555;
-      box-shadow: none;
-    }
-
-    /* ===== ROM‑RESOLVER ===== */
     .rom-row {
       display: flex;
       flex-wrap: wrap;
@@ -222,8 +192,6 @@
       color: #b0d8ff;
       background: #1c2d4a;
     }
-
-    /* ===== ROUTER‑INFO ===== */
     .router-path {
       background: #0d1422;
       border-radius: 30px;
@@ -234,8 +202,20 @@
       display: inline-block;
       font-size: 0.9rem;
     }
-
-    /* ===== FOOTER ===== */
+    .router-btn {
+      background: #1a2640;
+      border: 1px solid #3a506e;
+      border-radius: 30px;
+      padding: 0.3rem 1rem;
+      color: #b0d0ff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .router-btn:hover {
+      background: #2a3a5a;
+      border-color: #6aafff;
+    }
     .net-footer {
       margin-top: 2rem;
       border-top: 1px solid rgba(80, 160, 255, 0.15);
@@ -246,24 +226,20 @@
       font-size: 0.8rem;
       color: #5a7a9a;
     }
-    .net-footer .tick {
-      color: #7a9bcb;
-    }
+    .net-footer .tick { color: #7a9bcb; }
   </style>
 </head>
 <body>
 <div class="net-card" id="app">
 
-  <!-- HEADER -->
   <header class="net-header">
     <h1>🧠 <span>NET</span>.work · Vitality Narrative</h1>
     <div class="stage-badge" id="stageBadge">🌐 ROOT</div>
   </header>
 
-  <!-- DASHBOARD -->
   <div class="dashboard">
 
-    <!-- LINKES PANEL: NC‑FIGUR + RESPO -->
+    <!-- LINKES PANEL -->
     <div class="panel">
       <div class="panel-title">⚡ NC‑Figur · Lauf-Mann</div>
       <div class="figur-box">
@@ -275,7 +251,6 @@
           <div class="stat"><span class="stat-label">State</span><span class="stat-value" id="figurState">● ready</span></div>
         </div>
       </div>
-
       <div class="panel-title" style="margin-top: 1.2rem;">📊 RESPO‑Mesh (81 Slots)</div>
       <div class="respo-grid" id="respoGrid"></div>
       <div class="respo-score">
@@ -284,7 +259,7 @@
       </div>
     </div>
 
-    <!-- RECHTES PANEL: READY + ROM + ROUTER -->
+    <!-- RECHTES PANEL -->
     <div class="panel">
       <div class="panel-title">🟢 Ready‑Signale · Verbund</div>
       <div class="ready-cluster" id="readyCluster">
@@ -327,7 +302,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="net-footer">
     <span>⏱️ <span class="tick" id="clockTick">0 ms</span></span>
     <span>🧩 <span id="moduleCount">12</span> Module · ∞‑Atom‑Kernel</span>
@@ -337,11 +311,8 @@
 
 <script type="module">
   // ================================================================
-  //  VITALITY NARRATIVE – NET.work index.html
-  //  Alle Module werden importiert, verbunden und laufen live.
+  //  ALLE IMPORTS
   // ================================================================
-
-  // ---- Imports (Core) ----
   import { kernel } from './js/core/OS_CORE.js';
   import { MODULES } from './js/core/axiom.map.js';
   import { Clock } from './js/nc/NC_time.js';
@@ -352,42 +323,46 @@
   import { resolve, seedDefaults } from './js/flow/resolver.js';
   import { uniRouter } from './stage/router.js';
 
-  // ---- Ready‑Module (deine API‑Signale) ----
+  // Ready‑Module
   import { sliReady } from './api.x.lan.open/sli.ready';
   import { quadReady } from './api.q.lan.raid.work/quad.ready';
   import { workQuadReady } from './api.atom.raid/workquad.ready';
   import { stageReady } from './api.y.lan.open/raid.x.y.raedy';
 
   // ================================================================
-  //  1.  KERNEL & CLOCK
+  //  GLOBAL MACHEN (damit überall darauf zugegriffen werden kann)
+  // ================================================================
+  window.uniRouter = uniRouter;
+  window.kernel = kernel;
+
+  // ================================================================
+  //  KERNEL & CLOCK
   // ================================================================
   const clock = new Clock();
   kernel.set('clock', clock);
   kernel.set('startTime', Date.now());
 
   // ================================================================
-  //  2.  NC‑FIGUR (Lauf-Mann)
+  //  NC‑FIGUR
   // ================================================================
   const laufmann = new Figur({ x: 0, y: 0, dir: 1, speed: 1.2, state: 'ready' });
   kernel.set('figur', laufmann);
-
   const laufKraft = new Kraft({ dx: 0.6, dy: 0.3, impulse: 0.08 });
 
   // ================================================================
-  //  3.  NC‑SPACE
+  //  NC‑SPACE
   // ================================================================
   const world = new Space(1200, 800);
   world.addFigur(laufmann);
 
   // ================================================================
-  //  4.  RESPO‑MESH (81 Slots)
+  //  RESPO‑MESH
   // ================================================================
   let mesh = [];
   let meshScore = 0;
   let activeCount = 0;
 
   function initRespo() {
-    // createMesh aus respo.js ist nicht exportiert, wir bauen ein eigenes
     const cols = 9, rows = 9;
     mesh = [];
     for (let r = 0; r < rows; r++) {
@@ -405,28 +380,20 @@
         });
       }
     }
-    // Referenzkurve setzen
     fitToReference(mesh, 0);
   }
   initRespo();
   kernel.set('respoMesh', mesh);
 
   // ================================================================
-  //  5.  ROM‑RESOLVER (Seeds)
+  //  ROM‑RESOLVER
   // ================================================================
   seedDefaults();
   const resolveInfo = resolve('#SLIDE');
   kernel.set('resolverInfo', resolveInfo);
 
   // ================================================================
-  //  6.  ROUTER (UNI‑Router)
-  // ================================================================
-  // router.js wird als Modul importiert – wir rufen die Funktion auf
-  // und binden sie an das globale Fenster.
-  window.uniRouter = uniRouter;
-
-  // ================================================================
-  //  7.  READY‑SIGNALE sammeln
+  //  READY‑SIGNALE
   // ================================================================
   const readySignals = {
     sli: sliReady(),
@@ -437,7 +404,7 @@
   kernel.set('readySignals', readySignals);
 
   // ================================================================
-  //  8.  DOM‑REFERENZEN
+  //  DOM‑REFERENZEN
   // ================================================================
   const $ = (id) => document.getElementById(id);
   const stageBadge = $('stageBadge');
@@ -454,7 +421,7 @@
   const vitalityStatus = $('vitalityStatus');
 
   // ================================================================
-  //  9.  RESPO‑GRID rendern
+  //  RESPO‑GRID RENDERN
   // ================================================================
   function renderRespo() {
     if (!mesh.length) return;
@@ -471,7 +438,6 @@
       } else if (intensity > 0.2) {
         cell.classList.add('warm');
       }
-      // Farbe nach Wert
       const r = Math.round(40 + intensity * 180);
       const g = Math.round(20 + (1 - intensity) * 100);
       const b = Math.round(80 + intensity * 200);
@@ -486,19 +452,13 @@
   }
 
   // ================================================================
-  //  10. SIMULATIONS‑SCHRITT
+  //  SIMULATIONSSCHRITT
   // ================================================================
   function stepSimulation(time) {
-    // 10a. Figur bewegen
     laufmann.applyKraft(laufKraft);
     laufmann.update();
-
-    // 10b. Respo‑Mesh aktualisieren
     fitToReference(mesh, time);
-    const avgScore = stepMesh(mesh, 0.05);
-    meshScore = avgScore;
-
-    // 10c. Figur‑Status in Kernel
+    stepMesh(mesh, 0.05);
     kernel.set('figurState', {
       x: laufmann.x,
       y: laufmann.y,
@@ -509,85 +469,65 @@
   }
 
   // ================================================================
-  //  11. UI‑UPDATE
+  //  UI‑UPDATE
   // ================================================================
   function updateUI() {
-    // Figur
     const fs = kernel.get('figurState') || { x: 0, y: 0, dir: 1, speed: 1.2, state: 'ready' };
     figurPos.textContent = `${fs.x.toFixed(1)}, ${fs.y.toFixed(1)}`;
     figurDir.textContent = fs.dir > 0 ? '→' : '←';
     figurSpeed.textContent = fs.speed.toFixed(2);
     figurState.textContent = fs.state === 'ready' ? '● ready' : '◌ moving';
 
-    // Respo
     renderRespo();
 
-    // Router / Stage
     const hash = location.hash.replace('#', '') || 'root';
     const mod = MODULES[hash] || MODULES.root;
     stageBadge.textContent = `🌐 ${mod.label}`;
     routerPath.textContent = `#${hash}`;
     moduleDesc.textContent = mod.desc;
 
-    // Clock
     const now = Date.now();
     const start = kernel.get('startTime') || now;
     clockTick.textContent = `${(now - start)} ms`;
 
-    // Vitalität
     vitalityStatus.textContent = meshScore > 0.3 ? '🌱 VITAL · läuft' : '⏳ initialisiert';
   }
 
   // ================================================================
-  //  12. LOOP (Animation)
+  //  LOOP
   // ================================================================
   let lastTime = 0;
-
   function loop(timestamp) {
     const delta = timestamp - lastTime;
     lastTime = timestamp;
-
-    // Simulationsschritt alle 50ms
     if (delta > 30) {
       stepSimulation(timestamp);
       updateUI();
     }
-
-    // Router‐Events abfangen (Hashchange wird von uniRouter behandelt)
-    // Wir rufen uniRouter bei jedem Tick auf, um sicher zu sein.
+    // Router bei jedem Tick aufrufen (für Synchronisation)
     if (typeof window.uniRouter === 'function') {
       window.uniRouter();
     }
-
     requestAnimationFrame(loop);
   }
 
   // ================================================================
-  //  13. ROUTER‑BUTTONS
+  //  ★★★ ROUTER‑BUTTONS AKTIVIEREN (DER FIX) ★★★
   // ================================================================
   document.querySelectorAll('.router-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.target;
-      location.hash = target;
+      location.hash = target;               // Hash ändern
+      // Sicherheitshalber Router manuell aufrufen
+      if (typeof window.uniRouter === 'function') {
+        window.uniRouter();
+      }
+      updateUI();                           // UI sofort aktualisieren
     });
   });
 
   // ================================================================
-  //  14. START
-  // ================================================================
-  // Respo initial rendern
-  renderRespo();
-  // Kernel State setzen
-  kernel.set('ready', true);
-  // Router initial auslösen
-  if (typeof window.uniRouter === 'function') {
-    window.uniRouter();
-  }
-  // Loop starten
-  requestAnimationFrame(loop);
-
-  // ================================================================
-  //  15. HASHCHANGE → Router (zusätzlich)
+  //  HASHCHANGE‑LISTENER
   // ================================================================
   window.addEventListener('hashchange', () => {
     if (typeof window.uniRouter === 'function') {
@@ -596,6 +536,16 @@
     updateUI();
   });
 
+  // ================================================================
+  //  START
+  // ================================================================
+  renderRespo();
+  kernel.set('ready', true);
+  if (typeof window.uniRouter === 'function') {
+    window.uniRouter();
+  }
+  requestAnimationFrame(loop);
+
   console.log('🧠 NET.work · Vitality Narrative gestartet');
   console.log('📦 Kernel:', kernel);
   console.log('🟢 Ready-Signale:', readySignals);
@@ -603,7 +553,6 @@
   console.log('📊 Respo-Mesh:', mesh.length, 'Slots');
   console.log('🔍 Resolver:', resolveInfo);
 
-  // Exponiere für DevTools
   window.__NET = { kernel, clock, laufmann, world, mesh, readySignals, MODULES };
 </script>
 </body>

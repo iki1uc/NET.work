@@ -1,0 +1,30 @@
+// sli.use.user.raid.ready — Borg-Anker für Router + Stage + Continuum
+
+import { USER_READY } from "../user/user.ready.js";
+import { USE_READY } from "../use/use.ready.js";
+import { VEC3_TMP } from "../use/vec3.js";
+import { VEC9_TMP } from "../use/vec9.js";
+
+export function SLI_USE_USER_RAID_READY(route = "root") {
+
+    return {
+        id: crypto.randomUUID(),
+        atom: "SLI.USE.USER.RAID",
+        route,
+
+        status: "READY",
+        axis: 9,
+        contact: "TP9",
+        time: Date.now(),
+        legal: "EU-DSGVO",
+
+        sli: VEC3_TMP("HY"),
+        use: USE_READY("NET.work"),
+        user: USER_READY("iki1uc"),
+        raid: VEC9_TMP(81),
+
+        vitality: 81,
+        synergy: true,
+        continuum: true
+    };
+}

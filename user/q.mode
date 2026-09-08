@@ -5,3 +5,19 @@
 
     TP4       TP3
         TP9
+// q.mode — NET/LAN/TMP/NC-Modus für 3→9→81→729
+
+export function qMode(){
+    return {
+        id: crypto.randomUUID(),   // anonym, EU-legal
+        mode: "RUN3",              // TMP-Modus
+        axis: 9,                   // 9×9 Maßstab
+        vec: "VEC9",               // Achsenmatrix
+        net: "NET_TMP",            // anonymes Netzmodell
+        lan: "neutral",            // keine LAN-Daten
+        home: "NC",                // neutral code
+        ort: "NC",                 // neutral code
+        time: Date.now(),          // TMP-Zeitpunkt
+        legal: "EU-DSGVO"          // Legitimation
+    };
+}

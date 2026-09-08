@@ -1,0 +1,9 @@
+{
+  "JOIN_orbitwelt": {
+    "mode": "o.mode",
+    "rooms": ["9.room", "81.room", "COMMANDS.room"],
+    "resolver": "tmp.hdf.resolver.js",
+    "orbit": "243",
+    "depth": "deep"
+  }
+}

@@ -1,157 +1,444 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATOM · NET.work · Live</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATOM · NET.work · Cube Königin</title>
 
-<style>
-  body {
-    margin:0; padding:0;
-    background:#0a0a12;
-    color:#e8edf5;
-    font-family:Inter, sans-serif;
-  }
-  #root {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    padding:20px;
-  }
-  .panel {
-    background:#131a24;
-    border:1px solid #1e2a3a;
-    border-radius:12px;
-    padding:16px;
-  }
-  h2 {
-    margin:0 0 12px 0;
-    font-size:18px;
-    color:#ffd700;
-  }
-  canvas {
-    width:100%; height:300px;
-    background:#0e141c;
-    border-radius:8px;
-  }
-  .btn {
-    background:#ffd700;
-    color:#000;
-    padding:10px 16px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:600;
-    margin-right:8px;
-  }
-  .btn:hover { opacity:0.85; }
-  #log {
-    max-height:200px;
-    overflow-y:auto;
-    font-size:12px;
-    background:#0e141c;
-    padding:10px;
-    border-radius:8px;
-  }
-</style>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a12;
+      color: #e8edf5;
+      font-family: 'Inter', system-ui, sans-serif;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #root {
+      max-width: 1400px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .panel {
+      background: #131a24;
+      border: 1px solid #1e2a3a;
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .panel h2 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      color: #ffd700;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid #2a3a4a;
+      padding-bottom: 8px;
+    }
+    canvas {
+      width: 100%;
+      height: 260px;
+      background: #0e141c;
+      border-radius: 10px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 14px;
+      color: #9aa8c0;
+    }
+    .info-row span { background: #1a2634; padding: 2px 12px; border-radius: 20px; }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 8px;
+    }
+    .btn {
+      background: #ffd700;
+      color: #0a0a12;
+      border: none;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .btn:hover { background: #ffe44d; transform: scale(1.02); }
+    .btn.outline {
+      background: transparent;
+      border: 1px solid #ffd700;
+      color: #ffd700;
+    }
+    .btn.outline:hover { background: #ffd70022; }
+    #routeOut {
+      font-size: 16px;
+      color: #c8d8f0;
+      margin: 4px 0 8px;
+    }
+    .ready-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      margin: 6px 0;
+    }
+    .ready-tag {
+      background: #1a2634;
+      border: 1px solid #2a4060;
+      border-radius: 30px;
+      padding: 2px 14px;
+      font-size: 13px;
+      color: #90b8ef;
+    }
+    .ready-tag .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #44cc88;
+      margin-right: 6px;
+      box-shadow: 0 0 6px #44cc88;
+    }
+    #log {
+      max-height: 160px;
+      overflow-y: auto;
+      font-size: 13px;
+      background: #0e141c;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 8px;
+      font-family: 'Courier New', monospace;
+    }
+    #log div { border-bottom: 1px solid #1a2634; padding: 4px 0; }
+    .rom-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 4px 0 8px;
+    }
+    .rom-char {
+      background: #162035;
+      border: 1px solid #2a4060;
+      border-radius: 6px;
+      padding: 0 8px;
+      font-family: monospace;
+      font-weight: 600;
+      color: #7a9bcb;
+    }
+    .rom-char.found { border-color: #66ccff; color: #b0d8ff; background: #1c2d4a; }
+    @media (max-width: 800px) { #root { grid-template-columns: 1fr; } }
+  </style>
 </head>
-
 <body>
-
 <div id="root">
 
-  <!-- NC-Figur -->
+  <!-- NC-FIGUR -->
   <div class="panel">
-    <h2>NC · Figur</h2>
+    <h2>🧠 NC · Figur (Lauf-Mann)</h2>
     <canvas id="figurCanvas"></canvas>
-  </div>
-
-  <!-- RESPO-Mesh -->
-  <div class="panel">
-    <h2>RESPO · Mesh</h2>
-    <canvas id="meshCanvas"></canvas>
-  </div>
-
-  <!-- Router -->
-  <div class="panel">
-    <h2>Router</h2>
-    <button class="btn" id="btnHome">Home</button>
-    <button class="btn" id="btnAxiom">Axiom</button>
-    <button class="btn" id="btnUser">User</button>
-    <button class="btn" id="btnNet">Net</button>
-    <div id="routeOut" style="margin-top:12px;font-size:14px;color:#9aa8c0;">
-      Route: /home
+    <div class="info-row">
+      <span id="figurPos">0, 0</span>
+      <span id="figurDir">→</span>
+      <span id="figurSpeed">1.2</span>
+      <span id="figurState">● ready</span>
     </div>
   </div>
 
-  <!-- Log -->
+  <!-- RESPO-MESH -->
   <div class="panel">
-    <h2>ATOM · Log</h2>
-    <div id="log"></div>
+    <h2>📊 RESPO · Mesh (81 Slots)</h2>
+    <canvas id="meshCanvas"></canvas>
+    <div class="info-row">
+      <span>🎯 Score <strong id="respoScore">0.00</strong></span>
+      <span>⚡ Aktiv <strong id="respoActive">0</strong></span>
+    </div>
   </div>
 
+  <!-- ROUTER + READY + ROM -->
+  <div class="panel">
+    <h2>🧭 Router · Axiom</h2>
+    <div class="btn-group">
+      <button class="btn" data-target="root">🏠 ROOT</button>
+      <button class="btn" data-target="core">⚙️ CORE</button>
+      <button class="btn" data-target="respo">📊 RESPO</button>
+      <button class="btn" data-target="boerse">📈 BOERSE</button>
+      <button class="btn" data-target="evo">🧬 EVO</button>
+    </div>
+    <div id="routeOut">🌐 ROOT</div>
+    <div style="font-size:14px; color:#7a9bcb;" id="moduleDesc">BRAIN‑Startzustand</div>
+
+    <div style="margin-top:14px; border-top:1px solid #1e2a3a; padding-top:12px;">
+      <div style="font-size:13px; color:#7a9bcb;">🟢 Ready‑Signale</div>
+      <div class="ready-tags" id="readyCluster">
+        <span class="ready-tag"><span class="dot"></span>sli.ready</span>
+        <span class="ready-tag"><span class="dot"></span>quad.ready</span>
+        <span class="ready-tag"><span class="dot"></span>workquad.ready</span>
+        <span class="ready-tag"><span class="dot"></span>raid.x.y.raedy</span>
+      </div>
+      <div style="font-size:13px; color:#7a9bcb; margin-top:6px;">📦 HDF‑ROM · Resolver</div>
+      <div class="rom-row" id="romRow">
+        <span class="rom-char found">d</span><span class="rom-char found">e</span>
+        <span class="rom-char found">i</span><span class="rom-char found">n</span>
+        <span class="rom-char found">o</span><span class="rom-char found">r</span>
+        <span class="rom-char found">s</span><span class="rom-char found">u</span>
+        <span class="rom-char found">w</span>
+      </div>
+      <div style="font-size:13px; color:#7a9bcb;" id="resolverInfo">resolve('#SLIDE') → { rom: 's', value: 'SLIDE.hdf' }</div>
+    </div>
+  </div>
+
+  <!-- LOG + KERNEL -->
+  <div class="panel">
+    <h2>⚡ ATOM · Log & Kernel</h2>
+    <div id="log"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:13px; color:#5a7a9a;">
+      <span>⏱️ <span id="clockTick">0 ms</span></span>
+      <span>🧩 <span id="moduleCount">12</span> Module</span>
+      <span>🌱 <span id="vitalityStatus">VITAL · läuft</span></span>
+    </div>
+  </div>
 </div>
 
-<script>
-/* ============================================================
-   ATOM · NC · RESPO · ROUTER · LIVE
-   ============================================================ */
+<script type="module">
+// ================================================================
+//  ATOM · NET.work · CUBE KÖNIGIN
+//  Alle Module integriert, Canvas‑Visualisierung, Live‑Simulation.
+// ================================================================
 
-const logEl = document.getElementById("log");
-function log(msg){
+// ---- Imports ----
+import { kernel } from './js/core/OS_CORE.js';
+import { MODULES } from './js/core/axiom.map.js';
+import { Clock } from './js/nc/NC_time.js';
+import { Space } from './js/nc/NC_space.js';
+import { Figur } from './js/nc/NC_figur.js';
+import { Kraft } from './js/nc/NC_kraft.js';
+import { stepMesh, fitToReference } from './js/flow/respo.js';
+import { resolve, seedDefaults } from './js/flow/resolver.js';
+import { sliReady } from './api.x.lan.open/sli.ready';
+import { quadReady } from './api.q.lan.raid.work/quad.ready';
+import { workQuadReady } from './api.atom.raid/workquad.ready';
+import { stageReady } from './api.y.lan.open/raid.x.y.raedy';
+
+// ---- DOM ----
+const $ = id => document.getElementById(id);
+const figurCanvas = $('figurCanvas');
+const fctx = figurCanvas.getContext('2d');
+const meshCanvas = $('meshCanvas');
+const mctx = meshCanvas.getContext('2d');
+const logEl = $('log');
+const routeOut = $('routeOut');
+const moduleDesc = $('moduleDesc');
+const clockTick = $('clockTick');
+const vitalityStatus = $('vitalityStatus');
+const respoScore = $('respoScore');
+const respoActive = $('respoActive');
+const figurPos = $('figurPos');
+const figurDir = $('figurDir');
+const figurSpeed = $('figurSpeed');
+const figurState = $('figurState');
+
+function log(msg) {
   const t = new Date().toLocaleTimeString();
   logEl.innerHTML += `<div>[${t}] ${msg}</div>`;
   logEl.scrollTop = logEl.scrollHeight;
 }
 
-/* ---------------- NC-Figur ---------------- */
-const figurCanvas = document.getElementById("figurCanvas");
-const fctx = figurCanvas.getContext("2d");
+// ---- Kernel & Clock ----
+const clock = new Clock();
+kernel.set('clock', clock);
+kernel.set('startTime', Date.now());
 
-function drawFigur(){
-  fctx.clearRect(0,0,figurCanvas.width,figurCanvas.height);
-  fctx.fillStyle="#ffd700";
-  fctx.beginPath();
-  fctx.arc(150,150,40,0,Math.PI*2);
-  fctx.fill();
-  log("NC-Figur aktualisiert");
-}
+// ---- NC‑Figur ----
+const laufmann = new Figur({ x: 0, y: 0, dir: 1, speed: 1.2, state: 'ready' });
+kernel.set('figur', laufmann);
+const laufKraft = new Kraft({ dx: 0.6, dy: 0.3, impulse: 0.08 });
 
-/* ---------------- RESPO-Mesh ---------------- */
-const meshCanvas = document.getElementById("meshCanvas");
-const mctx = meshCanvas.getContext("2d");
+// ---- NC‑Space ----
+const world = new Space(1200, 800);
+world.addFigur(laufmann);
 
-function drawMesh(){
-  mctx.clearRect(0,0,meshCanvas.width,meshCanvas.height);
-  mctx.strokeStyle="#4dd0e1";
-  for(let x=20;x<meshCanvas.width;x+=40){
-    for(let y=20;y<meshCanvas.height;y+=40){
-      mctx.strokeRect(x,y,30,30);
+// ---- RESPO‑Mesh ----
+let mesh = [];
+let meshScore = 0;
+let activeCount = 0;
+
+function initRespo() {
+  const cols = 9, rows = 9;
+  mesh = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const idx = r * cols + c;
+      const v = Math.sin(idx * 0.2 + 0.5);
+      mesh.push({
+        row: r, col: c,
+        x: (c / (cols - 1)) * 2 - 1,
+        z: (r / (rows - 1)) * 2 - 1,
+        value: v,
+        targetValue: v,
+        truth: 0,
+        score: 1
+      });
     }
   }
-  log("RESPO-Mesh aktualisiert");
+  fitToReference(mesh, 0);
+}
+initRespo();
+kernel.set('respoMesh', mesh);
+
+// ---- ROM‑Resolver ----
+seedDefaults();
+const resolveInfo = resolve('#SLIDE');
+kernel.set('resolverInfo', resolveInfo);
+
+// ---- Ready‑Signale ----
+const readySignals = {
+  sli: sliReady(),
+  quad: quadReady(),
+  workquad: workQuadReady(),
+  raidxy: stageReady()
+};
+kernel.set('readySignals', readySignals);
+
+// ---- Router (eigener, da importierter uniRouter auf #status etc. zugreift) ----
+function myRouter() {
+  const hash = location.hash.replace('#', '') || 'root';
+  const mod = MODULES[hash] || MODULES.root;
+  routeOut.textContent = `🌐 ${mod.label}`;
+  moduleDesc.textContent = mod.desc;
+  kernel.set('currentRoute', hash);
 }
 
-/* ---------------- Router ---------------- */
-const routeOut = document.getElementById("routeOut");
-function route(path){
-  routeOut.textContent = "Route: " + path;
-  log("Router → " + path);
+// ---- Canvas‑Zeichnen ----
+function drawFigur() {
+  const w = figurCanvas.width, h = figurCanvas.height;
+  fctx.clearRect(0, 0, w, h);
+  // Figur als leuchtender Punkt
+  const cx = w/2 + laufmann.x * 0.8;
+  const cy = h/2 + laufmann.y * 0.8;
+  fctx.shadowColor = '#ffd700';
+  fctx.shadowBlur = 20;
+  fctx.beginPath();
+  fctx.arc(cx, cy, 20, 0, Math.PI*2);
+  fctx.fillStyle = '#ffd700';
+  fctx.fill();
+  fctx.shadowBlur = 0;
+  // Richtungspfeil
+  fctx.beginPath();
+  fctx.moveTo(cx + 30 * laufmann.dir, cy);
+  fctx.lineTo(cx + 10 * laufmann.dir, cy - 10);
+  fctx.lineTo(cx + 10 * laufmann.dir, cy + 10);
+  fctx.closePath();
+  fctx.fillStyle = '#ffaa00';
+  fctx.fill();
 }
 
-document.getElementById("btnHome").onclick = ()=>route("/home");
-document.getElementById("btnAxiom").onclick = ()=>route("/axiom");
-document.getElementById("btnUser").onclick = ()=>route("/user");
-document.getElementById("btnNet").onclick = ()=>route("/net");
+function drawMesh() {
+  const w = meshCanvas.width, h = meshCanvas.height;
+  mctx.clearRect(0, 0, w, h);
+  const cols = 9, rows = 9;
+  const cellW = (w - 20) / cols, cellH = (h - 20) / rows;
+  let active = 0;
+  mesh.forEach(s => {
+    const x = 10 + s.col * cellW, y = 10 + s.row * cellH;
+    const val = s.value ?? 0;
+    const intensity = Math.min(1, Math.abs(val) * 1.2);
+    const r = Math.round(40 + intensity * 180);
+    const g = Math.round(20 + (1 - intensity) * 100);
+    const b = Math.round(80 + intensity * 200);
+    mctx.fillStyle = `rgb(${r},${g},${b})`;
+    mctx.fillRect(x, y, cellW-2, cellH-2);
+    if (intensity > 0.6) active++;
+  });
+  activeCount = active;
+  respoActive.textContent = active;
+  const avg = mesh.reduce((sum, s) => sum + (s.score ?? 0), 0) / mesh.length;
+  meshScore = avg;
+  respoScore.textContent = avg.toFixed(3);
+}
 
-/* ---------------- INIT ---------------- */
-function init(){
+// ---- Simulation ----
+function stepSimulation(time) {
+  laufmann.applyKraft(laufKraft);
+  laufmann.update();
+  fitToReference(mesh, time);
+  stepMesh(mesh, 0.05);
+  kernel.set('figurState', {
+    x: laufmann.x, y: laufmann.y,
+    dir: laufmann.dir, speed: laufmann.speed, state: laufmann.state
+  });
+}
+
+// ---- UI‑Update ----
+function updateUI() {
+  const fs = kernel.get('figurState') || { x:0, y:0, dir:1, speed:1.2, state:'ready' };
+  figurPos.textContent = `${fs.x.toFixed(1)}, ${fs.y.toFixed(1)}`;
+  figurDir.textContent = fs.dir > 0 ? '→' : '←';
+  figurSpeed.textContent = fs.speed.toFixed(2);
+  figurState.textContent = fs.state === 'ready' ? '● ready' : '◌ moving';
+
   drawFigur();
   drawMesh();
-  log("ATOM · index.html geladen");
-}
-init();
+  myRouter();
 
+  const now = Date.now();
+  const start = kernel.get('startTime') || now;
+  clockTick.textContent = `${(now - start)} ms`;
+  vitalityStatus.textContent = meshScore > 0.3 ? '🌱 VITAL · läuft' : '⏳ initialisiert';
+}
+
+// ---- Loop ----
+let lastTime = 0;
+function loop(timestamp) {
+  const delta = timestamp - lastTime;
+  lastTime = timestamp;
+  if (delta > 30) {
+    stepSimulation(timestamp);
+    updateUI();
+  }
+  requestAnimationFrame(loop);
+}
+
+// ---- Router‑Buttons ----
+document.querySelectorAll('[data-target]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.target;
+    location.hash = target;
+    myRouter();
+    updateUI();
+  });
+});
+
+// ---- Hash‑Change ----
+window.addEventListener('hashchange', () => {
+  myRouter();
+  updateUI();
+});
+
+// ---- Start ----
+if (!location.hash) location.hash = 'root';
+myRouter();
+drawFigur();
+drawMesh();
+kernel.set('ready', true);
+requestAnimationFrame(loop);
+
+log('🧠 ATOM · Cube Königin gestartet');
+log('📦 Kernel geladen');
+log(`🏃 Figur: ${laufmann.x}, ${laufmann.y}`);
+log(`📊 Respo: ${mesh.length} Slots`);
+log(`🔍 Resolver: ${resolveInfo?.rom || '—'}`);
+log(`🟢 Ready: ${Object.keys(readySignals).join(', ')}`);
+
+window.__NET = { kernel, clock, laufmann, world, mesh, readySignals, MODULES };
 </script>
 </body>
 </html>

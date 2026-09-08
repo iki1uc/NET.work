@@ -1,4 +1,4 @@
-// vec3.js — 3D‑Vektoren für IKI1UC · STAGE · RESPO.ai
+// vec3.js — TMP‑Vektoren für NET · LAN · TMP · EU‑legal
 
 export class Vec3 {
     constructor(x = 0, y = 0, z = 0) {
@@ -7,57 +7,27 @@ export class Vec3 {
         this.z = z;
     }
 
-    // Betrag (Länge)
     magnitude() {
-        return Math.sqrt(
-            this.x*this.x +
-            this.y*this.y +
-            this.z*this.z
-        );
+        return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
     }
 
-    // Addition
-    add(v) {
-        return new Vec3(
-            this.x + v.x,
-            this.y + v.y,
-            this.z + v.z
-        );
-    }
+    add(v) { return new Vec3(this.x + v.x, this.y + v.y, this.z + v.z); }
+    sub(v) { return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z); }
+    scale(s){ return new Vec3(this.x * s, this.y * s, this.z * s); }
 
-    // Subtraktion
-    sub(v) {
-        return new Vec3(
-            this.x - v.x,
-            this.y - v.y,
-            this.z - v.z
-        );
-    }
-
-    // Skalar-Multiplikation
-    scale(s) {
-        return new Vec3(
-            this.x * s,
-            this.y * s,
-            this.z * s
-        );
-    }
-
-    // Komplexe Darstellung (Real + Imaginär)
-    toComplex() {
-        return `${this.x} + ${this.y}i + ${this.z}j`;
-    }
-
-    // Ausgabe
-    toString() {
-        return `(${this.x}, ${this.y}, ${this.z})`;
-    }
+    toComplex() { return `${this.x} + ${this.y}i + ${this.z}j`; }
+    toString() { return `(${this.x}, ${this.y}, ${this.z})`; }
 }
 
-// Beispiel-Vektoren (3→9→81 kompatibel)
-export const VEC3_CORE = {
-    HY:  new Vec3(3, 9, 81),
-    PE:  new Vec3(9, 81, 756),
-    PER: new Vec3(3, 9, 756),
-    TMP: new Vec3(27, 81, 3)
-};
+// TMP‑Ableitung (EU‑legal, anonym)
+export function makeVEC3_TMP(){
+    return {
+        id: crypto.randomUUID(),   // anonym, nicht rückverfolgbar
+        HY:  new Vec3(3, 9, 81),
+        PE:  new Vec3(9, 81, 27),
+        PER: new Vec3(3, 9, 27),
+        TMP: new Vec3(27, 81, 3),
+        time: Date.now(),          // TMP‑Zeitpunkt
+        legal: "EU-DSGVO"          // Legitimation
+    };
+}

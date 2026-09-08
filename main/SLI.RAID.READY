@@ -1,0 +1,31 @@
+// SLI.RAID.READY — vereint USER + USE + RAID + SLI
+
+import { USER_READY } from "../user/user.ready.js";
+import { USE_READY } from "../use/use.ready.js";
+import { VEC3_TMP } from "../use/vec3.js";
+import { VEC9_TMP } from "../use/vec9.js";
+
+export function SLI_RAID_READY(name = "SLI-RAID") {
+
+    return {
+        id: crypto.randomUUID(),
+        atom: "SLI.RAID",
+        name,
+
+        status: "READY",
+        axis: 9,
+        contact: "TP9",
+        time: Date.now(),
+        legal: "EU-DSGVO",
+
+        // beide Bindungen in EINEM Atom
+        sli: VEC3_TMP("HY"),
+        use: USE_READY("NET.work"),
+        user: USER_READY("iki1uc"),
+        raid: VEC9_TMP(81),
+
+        vitality: 81,
+        synergy: true,
+        continuum: true
+    };
+}

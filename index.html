@@ -1,444 +1,534 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ATOM · NET.work · Cube Königin</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👑 IKI1UC · NET.work · Königliche Atom‑Index</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: #0a0a12;
-      color: #e8edf5;
-      font-family: 'Inter', system-ui, sans-serif;
-      padding: 20px;
+      color: #d0d9e6;
+      font-family: 'Consolas', monospace;
+      padding: 16px;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: radial-gradient(ellipse at 20% 30%, #0c0c1a, #000);
     }
-    #root {
+    .container {
       max-width: 1400px;
-      width: 100%;
+      margin: 0 auto;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #ffd700;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 26px;
+      letter-spacing: 4px;
+      background: linear-gradient(90deg, #ffd700, #66ccff, #ff66ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header .sub {
+      font-size: 11px;
+      color: #3d5a70;
+      letter-spacing: 2px;
+      -webkit-text-fill-color: #3d5a70;
+    }
+    .status-led {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+    }
+    .led {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .led.green { background: #4f4; box-shadow: 0 0 8px #4f4; }
+    .led.yellow { background: #ffa; box-shadow: 0 0 8px #ffa; }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: rgba(10,10,20,0.75);
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+      transition: border-color 0.3s;
+    }
+    .card:hover { border-color: #ffd70055; }
+    .card h2 {
+      color: #ffd700;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .card h2 .badge {
+      font-size: 9px;
+      background: #1a1a2a;
+      padding: 2px 10px;
+      border-radius: 20px;
+      color: #888;
+    }
+    .metric-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 4px;
     }
-    .panel {
-      background: #131a24;
-      border: 1px solid #1e2a3a;
-      border-radius: 16px;
-      padding: 20px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    .metric {
+      background: #0e0e1a;
+      border-radius: 4px;
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
     }
-    .panel h2 {
-      margin: 0 0 12px 0;
-      font-size: 18px;
+    .metric .label { color: #666; }
+    .metric .value { font-weight: bold; }
+    .value.gold { color: #ffd700; }
+    .value.cyan { color: #66ccff; }
+    .value.pink { color: #ff66ff; }
+    .value.green { color: #4f4; }
+    .value.orange { color: #ff8c00; }
+
+    .deutung {
+      background: rgba(10,10,20,0.7);
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .deutung h2 {
       color: #ffd700;
-      letter-spacing: 0.02em;
-      border-bottom: 1px solid #2a3a4a;
-      padding-bottom: 8px;
-    }
-    canvas {
-      width: 100%;
-      height: 260px;
-      background: #0e141c;
-      border-radius: 10px;
-      display: block;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
       margin-bottom: 8px;
     }
-    .info-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-      font-size: 14px;
-      color: #9aa8c0;
+    #log {
+      background: #06060a;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 10px;
+      max-height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: #88ddbb;
+      border: 1px solid #1a1a2a;
+      line-height: 1.6;
     }
-    .info-row span { background: #1a2634; padding: 2px 12px; border-radius: 20px; }
-    .btn-group {
+
+    .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin: 12px 0 8px;
+      background: rgba(10,10,20,0.5);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #1a1a2a;
+      align-items: center;
     }
-    .btn {
-      background: #ffd700;
-      color: #0a0a12;
-      border: none;
-      border-radius: 30px;
-      padding: 8px 18px;
-      font-weight: 600;
+    .controls button {
+      background: #111;
+      color: #d0d9e6;
+      border: 1px solid #333;
+      padding: 6px 16px;
+      border-radius: 4px;
       cursor: pointer;
-      transition: all 0.2s;
-      font-size: 14px;
+      font-family: inherit;
+      font-size: 10px;
+      transition: 0.2s;
     }
-    .btn:hover { background: #ffe44d; transform: scale(1.02); }
-    .btn.outline {
-      background: transparent;
-      border: 1px solid #ffd700;
-      color: #ffd700;
+    .controls button:hover { border-color: #ffd700; background: #1a1a2a; }
+    .controls button.primary { border-color: #ffd700; color: #ffd700; }
+    .controls button.primary:hover { background: #ffd700; color: #000; }
+    .controls button.attack { border-color: #ff8c00; color: #ff8c00; }
+    .controls button.attack:hover { background: #ff8c00; color: #000; }
+    .controls input {
+      background: #1e242c;
+      border: 1px solid #2f3542;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 10px;
+      flex: 1;
+      min-width: 140px;
     }
-    .btn.outline:hover { background: #ffd70022; }
-    #routeOut {
-      font-size: 16px;
-      color: #c8d8f0;
-      margin: 4px 0 8px;
-    }
-    .ready-tags {
+    .controls input::placeholder { color: #445555; }
+
+    .footer {
+      margin-top: 20px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 6px;
+      font-size: 9px;
+      color: #445555;
       display: flex;
+      justify-content: space-between;
       flex-wrap: wrap;
-      gap: 6px 12px;
+    }
+    .footer .gold { color: #ffd700; }
+
+    .matrix-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin: 6px 0;
     }
-    .ready-tag {
-      background: #1a2634;
-      border: 1px solid #2a4060;
-      border-radius: 30px;
-      padding: 2px 14px;
-      font-size: 13px;
-      color: #90b8ef;
-    }
-    .ready-tag .dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #44cc88;
-      margin-right: 6px;
-      box-shadow: 0 0 6px #44cc88;
-    }
-    #log {
-      max-height: 160px;
-      overflow-y: auto;
-      font-size: 13px;
-      background: #0e141c;
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 8px;
-      font-family: 'Courier New', monospace;
-    }
-    #log div { border-bottom: 1px solid #1a2634; padding: 4px 0; }
-    .rom-row {
+    .matrix-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin: 4px 0 8px;
+      justify-content: center;
+      gap: 30px;
+      padding: 4px 0;
     }
-    .rom-char {
-      background: #162035;
-      border: 1px solid #2a4060;
+    .matrix-node {
+      background: #0a0a0a;
+      padding: 4px 14px;
       border-radius: 6px;
-      padding: 0 8px;
-      font-family: monospace;
-      font-weight: 600;
-      color: #7a9bcb;
+      border: 1px solid #3d5a70;
+      color: #ffd700;
+      font-weight: bold;
+      min-width: 50px;
+      text-align: center;
     }
-    .rom-char.found { border-color: #66ccff; color: #b0d8ff; background: #1c2d4a; }
-    @media (max-width: 800px) { #root { grid-template-columns: 1fr; } }
+    .matrix-arrow { color: #0ff; font-size: 16px; }
+    .matrix-label { font-size: 9px; color: #3d5a70; margin-top: 2px; }
   </style>
 </head>
 <body>
-<div id="root">
+<div class="container">
 
-  <!-- NC-FIGUR -->
-  <div class="panel">
-    <h2>🧠 NC · Figur (Lauf-Mann)</h2>
-    <canvas id="figurCanvas"></canvas>
-    <div class="info-row">
-      <span id="figurPos">0, 0</span>
-      <span id="figurDir">→</span>
-      <span id="figurSpeed">1.2</span>
-      <span id="figurState">● ready</span>
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>👑 IKI1UC · NET.work</h1>
+      <div class="sub">Königliche Atom‑Index · 3‑9‑81 · Industrie 6.0</div>
+    </div>
+    <div class="status-led">
+      <span><span class="led green"></span> NET.online</span>
+      <span><span class="led green"></span> RESPO.master</span>
+      <span id="sys-clock" style="color:#666;">⏱️ --:--</span>
     </div>
   </div>
 
-  <!-- RESPO-MESH -->
-  <div class="panel">
-    <h2>📊 RESPO · Mesh (81 Slots)</h2>
-    <canvas id="meshCanvas"></canvas>
-    <div class="info-row">
-      <span>🎯 Score <strong id="respoScore">0.00</strong></span>
-      <span>⚡ Aktiv <strong id="respoActive">0</strong></span>
-    </div>
-  </div>
-
-  <!-- ROUTER + READY + ROM -->
-  <div class="panel">
-    <h2>🧭 Router · Axiom</h2>
-    <div class="btn-group">
-      <button class="btn" data-target="root">🏠 ROOT</button>
-      <button class="btn" data-target="core">⚙️ CORE</button>
-      <button class="btn" data-target="respo">📊 RESPO</button>
-      <button class="btn" data-target="boerse">📈 BOERSE</button>
-      <button class="btn" data-target="evo">🧬 EVO</button>
-    </div>
-    <div id="routeOut">🌐 ROOT</div>
-    <div style="font-size:14px; color:#7a9bcb;" id="moduleDesc">BRAIN‑Startzustand</div>
-
-    <div style="margin-top:14px; border-top:1px solid #1e2a3a; padding-top:12px;">
-      <div style="font-size:13px; color:#7a9bcb;">🟢 Ready‑Signale</div>
-      <div class="ready-tags" id="readyCluster">
-        <span class="ready-tag"><span class="dot"></span>sli.ready</span>
-        <span class="ready-tag"><span class="dot"></span>quad.ready</span>
-        <span class="ready-tag"><span class="dot"></span>workquad.ready</span>
-        <span class="ready-tag"><span class="dot"></span>raid.x.y.raedy</span>
+  <!-- DREI ACHSEN -->
+  <div class="grid-3">
+    <div class="card">
+      <h2>🌍 WELT <span class="badge">3</span></h2>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Router</span><span class="value gold" id="welt-router">aktiv</span></div>
+        <div class="metric"><span class="label">Stage</span><span class="value cyan" id="welt-stage">3D</span></div>
+        <div class="metric"><span class="label">Plugins</span><span class="value pink" id="welt-plugins">13</span></div>
+        <div class="metric"><span class="label">Badges</span><span class="value orange" id="welt-badges">0</span></div>
       </div>
-      <div style="font-size:13px; color:#7a9bcb; margin-top:6px;">📦 HDF‑ROM · Resolver</div>
-      <div class="rom-row" id="romRow">
-        <span class="rom-char found">d</span><span class="rom-char found">e</span>
-        <span class="rom-char found">i</span><span class="rom-char found">n</span>
-        <span class="rom-char found">o</span><span class="rom-char found">r</span>
-        <span class="rom-char found">s</span><span class="rom-char found">u</span>
-        <span class="rom-char found">w</span>
+    </div>
+    <div class="card">
+      <h2>⚡ KRAFT <span class="badge">9</span></h2>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Queue</span><span class="value cyan" id="kraft-queue">0</span></div>
+        <div class="metric"><span class="label">ZEN</span><span class="value gold" id="kraft-zen">bereit</span></div>
+        <div class="metric"><span class="label">Dispatcher</span><span class="value green" id="kraft-input">aktiv</span></div>
+        <div class="metric"><span class="label">Befehle</span><span class="value orange" id="kraft-cmds">0</span></div>
       </div>
-      <div style="font-size:13px; color:#7a9bcb;" id="resolverInfo">resolve('#SLIDE') → { rom: 's', value: 'SLIDE.hdf' }</div>
+    </div>
+    <div class="card">
+      <h2>🧬 LEBEN <span class="badge">81</span></h2>
+      <div class="metric-grid">
+        <div class="metric"><span class="label">Zellen</span><span class="value pink" id="leben-zellen">81</span></div>
+        <div class="metric"><span class="label">Tick</span><span class="value gold" id="leben-tick">0</span></div>
+        <div class="metric"><span class="label">Vital</span><span class="value green" id="leben-vital">0.00</span></div>
+        <div class="metric"><span class="label">Drift</span><span class="value cyan" id="leben-drift">0.00</span></div>
+      </div>
     </div>
   </div>
 
-  <!-- LOG + KERNEL -->
-  <div class="panel">
-    <h2>⚡ ATOM · Log & Kernel</h2>
-    <div id="log"></div>
-    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:13px; color:#5a7a9a;">
-      <span>⏱️ <span id="clockTick">0 ms</span></span>
-      <span>🧩 <span id="moduleCount">12</span> Module</span>
-      <span>🌱 <span id="vitalityStatus">VITAL · läuft</span></span>
+  <!-- MATRIX VISUAL -->
+  <div class="deutung" style="border-color:#ffd70044;">
+    <h2>🧮 3hit90 · MATRIX <span style="font-size:9px;color:#3d5a70;font-weight:400;">(81 → 243 → 729)</span></h2>
+    <div class="matrix-visual">
+      <div class="matrix-row">
+        <span class="matrix-node" id="m81">81</span>
+        <span class="matrix-arrow">→</span>
+        <span class="matrix-node" id="m243">243</span>
+        <span class="matrix-arrow">→</span>
+        <span class="matrix-node" id="m729">729</span>
+      </div>
+      <div class="matrix-label" id="formulaDisplay">3 × (0 ÷ 6) × 90 = 0</div>
     </div>
   </div>
+
+  <!-- LOG / DEUTUNG -->
+  <div class="deutung">
+    <h2>📖 DEUTUNG · Netz‑Log</h2>
+    <div id="log">▶ IKI1UC · NET.work · Königliche Atom‑Index bereit …</div>
+  </div>
+
+  <!-- STEUERUNG -->
+  <div class="controls">
+    <input id="cmdInput" placeholder="SHOCK / WAVE / LINK / PUSH / GROW / MOVE / BREAK" />
+    <button class="attack" onclick="sendCmd()">⚡ SENDEN</button>
+    <button class="primary" onclick="toggleAuto()">▶ AUTO</button>
+    <button onclick="stepTick()">⏭ SCHRITT</button>
+    <button onclick="resetAll()">⟲ RESET</button>
+    <span style="color:#666;font-size:9px;">Speed:</span>
+    <input type="range" id="speedSlider" min="1" max="10" value="3" style="width:80px;background:#1e242c;" />
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>🧬 IKI1UC · <span class="gold">NET.work</span></span>
+    <span>⚡ 3‑9‑81 · Industrie 6.0</span>
+    <span>⌨️  Leertaste = Auto‑Toggle · Enter = Befehl</span>
+  </div>
+
 </div>
 
-<script type="module">
-// ================================================================
-//  ATOM · NET.work · CUBE KÖNIGIN
-//  Alle Module integriert, Canvas‑Visualisierung, Live‑Simulation.
-// ================================================================
+<script>
+  // ================================================================
+  // IKI1UC · NET.work — Königliche Atom‑Engine
+  // ================================================================
 
-// ---- Imports ----
-import { kernel } from './js/core/OS_CORE.js';
-import { MODULES } from './js/core/axiom.map.js';
-import { Clock } from './js/nc/NC_time.js';
-import { Space } from './js/nc/NC_space.js';
-import { Figur } from './js/nc/NC_figur.js';
-import { Kraft } from './js/nc/NC_kraft.js';
-import { stepMesh, fitToReference } from './js/flow/respo.js';
-import { resolve, seedDefaults } from './js/flow/resolver.js';
-import { sliReady } from './api.x.lan.open/sli.ready';
-import { quadReady } from './api.q.lan.raid.work/quad.ready';
-import { workQuadReady } from './api.atom.raid/workquad.ready';
-import { stageReady } from './api.y.lan.open/raid.x.y.raedy';
+  const NET = {
+    tick: 0,
+    paused: false,
+    auto: false,
+    speed: 3,
 
-// ---- DOM ----
-const $ = id => document.getElementById(id);
-const figurCanvas = $('figurCanvas');
-const fctx = figurCanvas.getContext('2d');
-const meshCanvas = $('meshCanvas');
-const mctx = meshCanvas.getContext('2d');
-const logEl = $('log');
-const routeOut = $('routeOut');
-const moduleDesc = $('moduleDesc');
-const clockTick = $('clockTick');
-const vitalityStatus = $('vitalityStatus');
-const respoScore = $('respoScore');
-const respoActive = $('respoActive');
-const figurPos = $('figurPos');
-const figurDir = $('figurDir');
-const figurSpeed = $('figurSpeed');
-const figurState = $('figurState');
+    welt: { router: 'aktiv', stage: '3D', plugins: 13, badges: 0 },
+    kraft: { queue: 0, zen: 'bereit', dispatcher: 'aktiv', cmds: 0 },
+    leben: { zellen: 81, tick: 0, vital: 0.5, drift: 0.1 },
 
-function log(msg) {
-  const t = new Date().toLocaleTimeString();
-  logEl.innerHTML += `<div>[${t}] ${msg}</div>`;
-  logEl.scrollTop = logEl.scrollHeight;
-}
+    matrix: { atom: 81, uni: 243, run: 729 },
+    commands: [],
+    log: [],
+    maxLog: 50,
 
-// ---- Kernel & Clock ----
-const clock = new Clock();
-kernel.set('clock', clock);
-kernel.set('startTime', Date.now());
+    init() {
+      this.logMsg('👑 IKI1UC · NET.work · Königliche Atom‑Index gestartet');
+      this.logMsg('💡 Befehle: SHOCK, WAVE, LINK, PUSH, GROW, MOVE, BREAK');
+      this.updateUI();
+      this.updateMatrix(0);
+    },
 
-// ---- NC‑Figur ----
-const laufmann = new Figur({ x: 0, y: 0, dir: 1, speed: 1.2, state: 'ready' });
-kernel.set('figur', laufmann);
-const laufKraft = new Kraft({ dx: 0.6, dy: 0.3, impulse: 0.08 });
+    tickStep() {
+      if (this.paused) return;
+      this.tick++;
+      this.leben.tick = this.tick;
+      this.leben.vital = 0.5 + 0.3 * Math.sin(this.tick * 0.05);
+      this.leben.drift = 0.1 + 0.05 * Math.cos(this.tick * 0.07);
+      this.kraft.zen = this.tick % 10 < 3 ? '⚡ aktiv' : 'bereit';
+      this.kraft.queue = Math.max(0, this.kraft.queue - 0.2);
+      this.welt.badges = Math.floor(this.tick / 20) % 10;
 
-// ---- NC‑Space ----
-const world = new Space(1200, 800);
-world.addFigur(laufmann);
+      if (this.commands.length > 0) {
+        const cmd = this.commands.shift();
+        this.processCmd(cmd);
+      }
+      this.updateUI();
+    },
 
-// ---- RESPO‑Mesh ----
-let mesh = [];
-let meshScore = 0;
-let activeCount = 0;
+    processCmd(cmd) {
+      const u = cmd.toUpperCase();
+      this.logMsg(`⚡ Befehl: ${u}`);
+      this.kraft.cmds++;
+      if (u.includes('SHOCK')) {
+        this.kraft.queue += 5;
+        this.leben.vital = Math.min(1, this.leben.vital + 0.1);
+        this.logMsg('💥 SHOCK → Queue +5, Vital +0.1');
+      } else if (u.includes('WAVE')) {
+        this.kraft.queue += 3;
+        this.leben.drift += 0.05;
+        this.logMsg('🌊 WAVE → Drift +0.05');
+      } else if (u.includes('LINK')) {
+        this.welt.badges = Math.min(20, this.welt.badges + 3);
+        this.logMsg('🔗 LINK → Badges +3');
+      } else if (u.includes('PUSH')) {
+        this.kraft.queue = Math.max(0, this.kraft.queue - 2);
+        this.logMsg('📌 PUSH → Queue -2');
+      } else if (u.includes('GROW')) {
+        this.leben.zellen = Math.min(243, this.leben.zellen + 10);
+        this.logMsg('🌱 GROW → Zellen +10');
+      } else if (u.includes('MOVE')) {
+        this.leben.drift = Math.max(0, this.leben.drift - 0.03);
+        this.logMsg('🚀 MOVE → Drift -0.03');
+      } else if (u.includes('BREAK')) {
+        this.kraft.queue = 0;
+        this.leben.vital = 0.3;
+        this.logMsg('💔 BREAK → Queue 0, Vital 0.3');
+      } else {
+        this.logMsg(`⚠️ Unbekannt: ${u}`);
+      }
+      this.updateUI();
+    },
 
-function initRespo() {
-  const cols = 9, rows = 9;
-  mesh = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const idx = r * cols + c;
-      const v = Math.sin(idx * 0.2 + 0.5);
-      mesh.push({
-        row: r, col: c,
-        x: (c / (cols - 1)) * 2 - 1,
-        z: (r / (rows - 1)) * 2 - 1,
-        value: v,
-        targetValue: v,
-        truth: 0,
-        score: 1
-      });
+    updateMatrix(input) {
+      const hits = Math.floor(input / 6);
+      const val = 3 * hits * 90;
+      this.matrix.atom = val * 81;
+      this.matrix.uni = val * 243;
+      this.matrix.run = val * 729;
+      document.getElementById('m81').textContent = this.matrix.atom.toFixed(0);
+      document.getElementById('m243').textContent = this.matrix.uni.toFixed(0);
+      document.getElementById('m729').textContent = this.matrix.run.toFixed(0);
+      document.getElementById('formulaDisplay').textContent = `3 × ${hits} × 90 = ${val}`;
+    },
+
+    updateUI() {
+      document.getElementById('welt-router').textContent = this.welt.router;
+      document.getElementById('welt-stage').textContent = this.welt.stage;
+      document.getElementById('welt-plugins').textContent = this.welt.plugins;
+      document.getElementById('welt-badges').textContent = this.welt.badges;
+      document.getElementById('kraft-queue').textContent = this.kraft.queue.toFixed(1);
+      document.getElementById('kraft-zen').textContent = this.kraft.zen;
+      document.getElementById('kraft-input').textContent = this.kraft.dispatcher;
+      document.getElementById('kraft-cmds').textContent = this.kraft.cmds;
+      document.getElementById('leben-zellen').textContent = this.leben.zellen;
+      document.getElementById('leben-tick').textContent = this.leben.tick;
+      document.getElementById('leben-vital').textContent = this.leben.vital.toFixed(2);
+      document.getElementById('leben-drift').textContent = this.leben.drift.toFixed(2);
+    },
+
+    logMsg(msg) {
+      const time = new Date().toLocaleTimeString();
+      this.log.push({ time, msg });
+      if (this.log.length > this.maxLog) this.log.shift();
+      this.renderLog();
+    },
+
+    renderLog() {
+      const out = document.getElementById('log');
+      out.innerHTML = this.log.map(e => `[${e.time}] ${e.msg}`).join('\n');
+      out.scrollTop = out.scrollHeight;
+    },
+
+    sendCmd(cmd) {
+      if (!cmd) {
+        const input = document.getElementById('cmdInput');
+        cmd = input.value.trim();
+        if (!cmd) return;
+        input.value = '';
+      }
+      this.commands.push(cmd);
+    },
+
+    togglePause() {
+      this.paused = !this.paused;
+      this.logMsg(this.paused ? '⏸ Pause' : '▶ Fortgesetzt');
+    },
+
+    stepTick() {
+      if (!this.paused) { this.paused = true; this.logMsg('⏭ Schritt (Pause aktiv)'); }
+      this.tickStep();
+    },
+
+    resetAll() {
+      this.tick = 0;
+      this.kraft.queue = 0;
+      this.kraft.cmds = 0;
+      this.leben.zellen = 81;
+      this.leben.vital = 0.5;
+      this.leben.drift = 0.1;
+      this.welt.badges = 0;
+      this.commands = [];
+      this.log = [];
+      this.logMsg('⟲ ALLES zurückgesetzt');
+      this.updateUI();
+      this.updateMatrix(0);
+    },
+
+    toggleAuto() {
+      this.auto = !this.auto;
+      this.logMsg(this.auto ? '▶ AUTO an' : '⏸ AUTO aus');
+      if (this.auto) {
+        const speed = parseInt(document.getElementById('speedSlider').value) || 3;
+        this.speed = speed;
+        if (this._autoInt) clearInterval(this._autoInt);
+        const delay = Math.max(200, 2000 / speed);
+        this._autoInt = setInterval(() => {
+          if (this.auto && !this.paused) this.tickStep();
+        }, delay);
+      } else {
+        if (this._autoInt) { clearInterval(this._autoInt); this._autoInt = null; }
+      }
+    },
+
+    calcMatrix() {
+      const input = this.kraft.cmds + this.kraft.queue + this.welt.badges;
+      this.updateMatrix(input);
+      this.logMsg(`📐 Matrix berechnet (${input})`);
     }
+  };
+
+  // ---- Globale Funktionen für Buttons ----
+  window.sendCmd = function() {
+    const input = document.getElementById('cmdInput');
+    const cmd = input.value.trim();
+    if (cmd) NET.sendCmd(cmd);
+  };
+  window.toggleAuto = function() { NET.toggleAuto(); };
+  window.stepTick = function() { NET.stepTick(); };
+  window.resetAll = function() { NET.resetAll(); };
+
+  // ---- Tastatur ----
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && document.activeElement === document.getElementById('cmdInput')) {
+      window.sendCmd(); e.preventDefault();
+    }
+    if (e.key === ' ' && e.target === document.body) {
+      e.preventDefault(); window.toggleAuto();
+    }
+  });
+
+  // ---- Speed Slider ----
+  document.getElementById('speedSlider').addEventListener('input', function() {
+    const speed = parseInt(this.value) || 3;
+    NET.speed = speed;
+    if (NET.auto) {
+      if (NET._autoInt) { clearInterval(NET._autoInt); NET._autoInt = null; }
+      const delay = Math.max(200, 2000 / speed);
+      NET._autoInt = setInterval(() => {
+        if (NET.auto && !NET.paused) NET.tickStep();
+      }, delay);
+    }
+  });
+
+  // ---- Uhr ----
+  function updateClock() {
+    document.getElementById('sys-clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
   }
-  fitToReference(mesh, 0);
-}
-initRespo();
-kernel.set('respoMesh', mesh);
+  setInterval(updateClock, 1000);
+  updateClock();
 
-// ---- ROM‑Resolver ----
-seedDefaults();
-const resolveInfo = resolve('#SLIDE');
-kernel.set('resolverInfo', resolveInfo);
+  // ---- Hintergrund-Tick ----
+  setInterval(() => {
+    if (!NET.auto && !NET.paused) NET.tickStep();
+  }, 700);
 
-// ---- Ready‑Signale ----
-const readySignals = {
-  sli: sliReady(),
-  quad: quadReady(),
-  workquad: workQuadReady(),
-  raidxy: stageReady()
-};
-kernel.set('readySignals', readySignals);
-
-// ---- Router (eigener, da importierter uniRouter auf #status etc. zugreift) ----
-function myRouter() {
-  const hash = location.hash.replace('#', '') || 'root';
-  const mod = MODULES[hash] || MODULES.root;
-  routeOut.textContent = `🌐 ${mod.label}`;
-  moduleDesc.textContent = mod.desc;
-  kernel.set('currentRoute', hash);
-}
-
-// ---- Canvas‑Zeichnen ----
-function drawFigur() {
-  const w = figurCanvas.width, h = figurCanvas.height;
-  fctx.clearRect(0, 0, w, h);
-  // Figur als leuchtender Punkt
-  const cx = w/2 + laufmann.x * 0.8;
-  const cy = h/2 + laufmann.y * 0.8;
-  fctx.shadowColor = '#ffd700';
-  fctx.shadowBlur = 20;
-  fctx.beginPath();
-  fctx.arc(cx, cy, 20, 0, Math.PI*2);
-  fctx.fillStyle = '#ffd700';
-  fctx.fill();
-  fctx.shadowBlur = 0;
-  // Richtungspfeil
-  fctx.beginPath();
-  fctx.moveTo(cx + 30 * laufmann.dir, cy);
-  fctx.lineTo(cx + 10 * laufmann.dir, cy - 10);
-  fctx.lineTo(cx + 10 * laufmann.dir, cy + 10);
-  fctx.closePath();
-  fctx.fillStyle = '#ffaa00';
-  fctx.fill();
-}
-
-function drawMesh() {
-  const w = meshCanvas.width, h = meshCanvas.height;
-  mctx.clearRect(0, 0, w, h);
-  const cols = 9, rows = 9;
-  const cellW = (w - 20) / cols, cellH = (h - 20) / rows;
-  let active = 0;
-  mesh.forEach(s => {
-    const x = 10 + s.col * cellW, y = 10 + s.row * cellH;
-    const val = s.value ?? 0;
-    const intensity = Math.min(1, Math.abs(val) * 1.2);
-    const r = Math.round(40 + intensity * 180);
-    const g = Math.round(20 + (1 - intensity) * 100);
-    const b = Math.round(80 + intensity * 200);
-    mctx.fillStyle = `rgb(${r},${g},${b})`;
-    mctx.fillRect(x, y, cellW-2, cellH-2);
-    if (intensity > 0.6) active++;
-  });
-  activeCount = active;
-  respoActive.textContent = active;
-  const avg = mesh.reduce((sum, s) => sum + (s.score ?? 0), 0) / mesh.length;
-  meshScore = avg;
-  respoScore.textContent = avg.toFixed(3);
-}
-
-// ---- Simulation ----
-function stepSimulation(time) {
-  laufmann.applyKraft(laufKraft);
-  laufmann.update();
-  fitToReference(mesh, time);
-  stepMesh(mesh, 0.05);
-  kernel.set('figurState', {
-    x: laufmann.x, y: laufmann.y,
-    dir: laufmann.dir, speed: laufmann.speed, state: laufmann.state
-  });
-}
-
-// ---- UI‑Update ----
-function updateUI() {
-  const fs = kernel.get('figurState') || { x:0, y:0, dir:1, speed:1.2, state:'ready' };
-  figurPos.textContent = `${fs.x.toFixed(1)}, ${fs.y.toFixed(1)}`;
-  figurDir.textContent = fs.dir > 0 ? '→' : '←';
-  figurSpeed.textContent = fs.speed.toFixed(2);
-  figurState.textContent = fs.state === 'ready' ? '● ready' : '◌ moving';
-
-  drawFigur();
-  drawMesh();
-  myRouter();
-
-  const now = Date.now();
-  const start = kernel.get('startTime') || now;
-  clockTick.textContent = `${(now - start)} ms`;
-  vitalityStatus.textContent = meshScore > 0.3 ? '🌱 VITAL · läuft' : '⏳ initialisiert';
-}
-
-// ---- Loop ----
-let lastTime = 0;
-function loop(timestamp) {
-  const delta = timestamp - lastTime;
-  lastTime = timestamp;
-  if (delta > 30) {
-    stepSimulation(timestamp);
-    updateUI();
-  }
-  requestAnimationFrame(loop);
-}
-
-// ---- Router‑Buttons ----
-document.querySelectorAll('[data-target]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.target;
-    location.hash = target;
-    myRouter();
-    updateUI();
-  });
-});
-
-// ---- Hash‑Change ----
-window.addEventListener('hashchange', () => {
-  myRouter();
-  updateUI();
-});
-
-// ---- Start ----
-if (!location.hash) location.hash = 'root';
-myRouter();
-drawFigur();
-drawMesh();
-kernel.set('ready', true);
-requestAnimationFrame(loop);
-
-log('🧠 ATOM · Cube Königin gestartet');
-log('📦 Kernel geladen');
-log(`🏃 Figur: ${laufmann.x}, ${laufmann.y}`);
-log(`📊 Respo: ${mesh.length} Slots`);
-log(`🔍 Resolver: ${resolveInfo?.rom || '—'}`);
-log(`🟢 Ready: ${Object.keys(readySignals).join(', ')}`);
-
-window.__NET = { kernel, clock, laufmann, world, mesh, readySignals, MODULES };
+  // ---- Start ----
+  NET.init();
+  console.log('👑 IKI1UC · NET.work · Königliche Atom‑Index geladen');
+  console.log('⌨️  Leertaste = Auto, Enter = Befehl');
 </script>
 </body>
 </html>

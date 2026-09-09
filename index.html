@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>👑 IKI1UC · NET.work · Königliche Atom‑Index</title>
+  <title>👑 IKI1UC · NET.work · Königliche Atom‑Index (Universalis)</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -54,6 +54,7 @@
     }
     .led.green { background: #4f4; box-shadow: 0 0 8px #4f4; }
     .led.yellow { background: #ffa; box-shadow: 0 0 8px #ffa; }
+    .led.red { background: #f66; box-shadow: 0 0 8px #f66; }
 
     .grid-3 {
       display: grid;
@@ -164,6 +165,8 @@
     .controls button.primary:hover { background: #ffd700; color: #000; }
     .controls button.attack { border-color: #ff8c00; color: #ff8c00; }
     .controls button.attack:hover { background: #ff8c00; color: #000; }
+    .controls button.resume { border-color: #4f4; color: #4f4; }
+    .controls button.resume:hover { background: #4f4; color: #000; }
     .controls input {
       background: #1e242c;
       border: 1px solid #2f3542;
@@ -214,6 +217,33 @@
     }
     .matrix-arrow { color: #0ff; font-size: 16px; }
     .matrix-label { font-size: 9px; color: #3d5a70; margin-top: 2px; }
+
+    /* ===== NET.work HUB (neu) ===== */
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 900px) { .hub-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .hub-grid { grid-template-columns: 1fr; } }
+    .hub-node {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #0e0e1a;
+      border: 1px solid #1a1a2a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-decoration: none;
+      color: #d0d9e6;
+      transition: 0.2s;
+    }
+    .hub-node:hover { border-color: #ffd700; background: #14141f; }
+    .hub-node .hub-icon { font-size: 18px; }
+    .hub-node .hub-name { font-weight: bold; font-size: 12px; color: #ffd700; }
+    .hub-node .hub-axis { font-size: 9px; color: #666; }
+    .hub-node .hub-status { font-size: 9px; margin-top: 2px; }
+    .hub-node .hub-status.unknown { color: #665; }
   </style>
 </head>
 <body>
@@ -223,11 +253,12 @@
   <div class="header">
     <div>
       <h1>👑 IKI1UC · NET.work</h1>
-      <div class="sub">Königliche Atom‑Index · 3‑9‑81 · Industrie 6.0</div>
+      <div class="sub">Königliche Atom‑Index · 3‑9‑81 · Industrie 6.0 · Universalis</div>
     </div>
     <div class="status-led">
       <span><span class="led green"></span> NET.online</span>
       <span><span class="led green"></span> RESPO.master</span>
+      <span id="pause-led"><span class="led green" id="pause-dot"></span> <span id="pause-label">läuft</span></span>
       <span id="sys-clock" style="color:#666;">⏱️ --:--</span>
     </div>
   </div>
@@ -265,7 +296,7 @@
 
   <!-- MATRIX VISUAL -->
   <div class="deutung" style="border-color:#ffd70044;">
-    <h2>🧮 3hit90 · MATRIX <span style="font-size:9px;color:#3d5a70;font-weight:400;">(81 → 243 → 729)</span></h2>
+    <h2>🧮 3hit90 · MATRIX <span style="font-size:9px;color:#3d5a70;font-weight:400;">(lebt jetzt mit jedem Tick)</span></h2>
     <div class="matrix-visual">
       <div class="matrix-row">
         <span class="matrix-node" id="m81">81</span>
@@ -275,6 +306,15 @@
         <span class="matrix-node" id="m729">729</span>
       </div>
       <div class="matrix-label" id="formulaDisplay">3 × (0 ÷ 6) × 90 = 0</div>
+    </div>
+  </div>
+
+  <!-- NET.work HUB (neu) -->
+  <div class="deutung" style="border-color:#66ccff44;">
+    <h2 style="color:#66ccff;">🕸️ NET.work · HUB <span style="font-size:9px;color:#3d5a70;font-weight:400;">Königsknoten → Module</span></h2>
+    <div class="hub-grid" id="hubGrid"></div>
+    <div style="font-size:9px;color:#445555;margin-top:8px;">
+      Links gehen relativ von dieser Datei aus. Ein Modul ist "erreichbar", wenn die Datei im selben Ordner liegt — sonst zeigt der Browser normal einen 404. Das ist reine Navigation, keine simulierte Verbindung.
     </div>
   </div>
 
@@ -290,6 +330,7 @@
     <button class="attack" onclick="sendCmd()">⚡ SENDEN</button>
     <button class="primary" onclick="toggleAuto()">▶ AUTO</button>
     <button onclick="stepTick()">⏭ SCHRITT</button>
+    <button class="resume" onclick="resumeRun()">▶ WEITER</button>
     <button onclick="resetAll()">⟲ RESET</button>
     <span style="color:#666;font-size:9px;">Speed:</span>
     <input type="range" id="speedSlider" min="1" max="10" value="3" style="width:80px;background:#1e242c;" />
@@ -299,15 +340,52 @@
   <div class="footer">
     <span>🧬 IKI1UC · <span class="gold">NET.work</span></span>
     <span>⚡ 3‑9‑81 · Industrie 6.0</span>
-    <span>⌨️  Leertaste = Auto‑Toggle · Enter = Befehl</span>
+    <span>⌨️  Leertaste = Auto‑Toggle · Enter = Befehl · p = Weiter</span>
   </div>
 
 </div>
 
 <script>
   // ================================================================
-  // IKI1UC · NET.work — Königliche Atom‑Engine
+  // IKI1UC · NET.work — Königliche Atom‑Engine (v2 · Universalis)
+  //
+  // Bugfixes gegenüber der Ursprungsversion:
+  //
+  // 1) FREEZE-BUG: stepTick() setzte paused=true und rief DANACH
+  //    tickStep() auf, das bei paused=true sofort abbricht. Der
+  //    SCHRITT-Button hat also nie wirklich getickt UND das System
+  //    für immer eingefroren (kein Button setzte paused wieder auf
+  //    false). Fix: tickStep(force) kann den paused-Check jetzt
+  //    gezielt übergehen, und ein neuer "▶ WEITER"-Button (plus
+  //    Taste "p") setzt paused wieder zurück.
+  //
+  // 2) RESET setzte paused nicht zurück → nach dem Freeze blieb
+  //    das System auch nach RESET eingefroren. Jetzt: resetAll()
+  //    setzt paused=false.
+  //
+  // 3) Die Matrix (81→243→729) wurde nur einmal bei init() mit
+  //    Input 0 berechnet; calcMatrix() existierte, wurde aber nie
+  //    aufgerufen. Die Anzeige war dauerhaft "3 × 0 × 90 = 0".
+  //    Fix: calcMatrix() wird jetzt am Ende jedes tickStep()
+  //    aufgerufen, die Matrix lebt jetzt wirklich mit.
+  //
+  // NEU: NET.work-HUB — Navigationskarten zu den anderen genannten
+  // Modulen (home.net.html, koop.net.html, move.lan.html,
+  // my.LAN.USE.html, wetter.wlan.html, soccer.mylan.html,
+  // axiom.net.html). Das sind einfache <a>-Links, keine simulierte
+  // Anbindung — ich kenne den Inhalt dieser Dateien nicht, daher
+  // wird hier nichts über sie behauptet oder aus ihnen geladen.
   // ================================================================
+
+  const HUB_MODULES = [
+    { file: 'home.net.html',    name: 'HOME',    axis: '.net',  icon: '🏠' },
+    { file: 'koop.net.html',    name: 'KOOP',    axis: '.net',  icon: '🤝' },
+    { file: 'move.lan.html',    name: 'MOVE',    axis: '.lan',  icon: '🚀' },
+    { file: 'my.LAN.USE.html', name: 'LAN.USE',  axis: '.lan',  icon: '🧩' },
+    { file: 'wetter.wlan.html', name: 'WETTER',  axis: '.wlan', icon: '⛅' },
+    { file: 'soccer.mylan.html', name: 'SOCCER', axis: '.mylan', icon: '⚽' },
+    { file: 'axiom.net.html',  name: 'AXIOM',    axis: '.net',  icon: '📐' }
+  ];
 
   const NET = {
     tick: 0,
@@ -325,14 +403,29 @@
     maxLog: 50,
 
     init() {
-      this.logMsg('👑 IKI1UC · NET.work · Königliche Atom‑Index gestartet');
+      this.logMsg('👑 IKI1UC · NET.work · Königliche Atom‑Index gestartet (v2, Freeze-Bug gefixt)');
       this.logMsg('💡 Befehle: SHOCK, WAVE, LINK, PUSH, GROW, MOVE, BREAK');
       this.updateUI();
       this.updateMatrix(0);
+      this.updatePauseLED();
+      this.renderHub();
     },
 
-    tickStep() {
-      if (this.paused) return;
+    renderHub() {
+      const grid = document.getElementById('hubGrid');
+      grid.innerHTML = HUB_MODULES.map(m => `
+        <a class="hub-node" href="${m.file}" target="_blank" rel="noopener">
+          <span class="hub-icon">${m.icon}</span>
+          <span class="hub-name">${m.name}</span>
+          <span class="hub-axis">${m.axis} · ${m.file}</span>
+          <span class="hub-status unknown">○ Status unbekannt (Datei nicht geprüft)</span>
+        </a>
+      `).join('');
+    },
+
+    // fix #1: force-Parameter erlaubt einen echten Tick trotz paused
+    tickStep(force) {
+      if (this.paused && !force) return;
       this.tick++;
       this.leben.tick = this.tick;
       this.leben.vital = 0.5 + 0.3 * Math.sin(this.tick * 0.05);
@@ -346,6 +439,7 @@
         this.processCmd(cmd);
       }
       this.updateUI();
+      this.calcMatrix(); // fix #3: Matrix lebt jetzt mit jedem Tick mit
     },
 
     processCmd(cmd) {
@@ -409,6 +503,13 @@
       document.getElementById('leben-drift').textContent = this.leben.drift.toFixed(2);
     },
 
+    updatePauseLED() {
+      const dot = document.getElementById('pause-dot');
+      const label = document.getElementById('pause-label');
+      dot.className = 'led ' + (this.paused ? 'red' : 'green');
+      label.textContent = this.paused ? 'eingefroren' : 'läuft';
+    },
+
     logMsg(msg) {
       const time = new Date().toLocaleTimeString();
       this.log.push({ time, msg });
@@ -432,14 +533,21 @@
       this.commands.push(cmd);
     },
 
-    togglePause() {
-      this.paused = !this.paused;
-      this.logMsg(this.paused ? '⏸ Pause' : '▶ Fortgesetzt');
+    // fix #1: STEP tickt jetzt WIRKLICH (force=true), pausiert
+    // danach bewusst, damit man Schritt für Schritt weitergehen kann
+    stepTick() {
+      this.paused = true;
+      this.logMsg('⏭ Schritt (danach pausiert)');
+      this.updatePauseLED();
+      this.tickStep(true);
     },
 
-    stepTick() {
-      if (!this.paused) { this.paused = true; this.logMsg('⏭ Schritt (Pause aktiv)'); }
-      this.tickStep();
+    // neu: expliziter Weg, aus dem pausierten Zustand rauszukommen,
+    // ohne gleich AUTO starten zu müssen
+    resumeRun() {
+      this.paused = false;
+      this.logMsg('▶ Weiter (nicht mehr pausiert)');
+      this.updatePauseLED();
     },
 
     resetAll() {
@@ -452,14 +560,18 @@
       this.welt.badges = 0;
       this.commands = [];
       this.log = [];
-      this.logMsg('⟲ ALLES zurückgesetzt');
+      this.paused = false; // fix #2: Reset hebt auch das Einfrieren auf
+      this.logMsg('⟲ ALLES zurückgesetzt (inkl. Pause-Zustand)');
       this.updateUI();
       this.updateMatrix(0);
+      this.updatePauseLED();
     },
 
     toggleAuto() {
       this.auto = !this.auto;
+      if (this.auto) this.paused = false; // AUTO hebt eine vorherige Pause mit auf
       this.logMsg(this.auto ? '▶ AUTO an' : '⏸ AUTO aus');
+      this.updatePauseLED();
       if (this.auto) {
         const speed = parseInt(document.getElementById('speedSlider').value) || 3;
         this.speed = speed;
@@ -476,7 +588,6 @@
     calcMatrix() {
       const input = this.kraft.cmds + this.kraft.queue + this.welt.badges;
       this.updateMatrix(input);
-      this.logMsg(`📐 Matrix berechnet (${input})`);
     }
   };
 
@@ -488,6 +599,7 @@
   };
   window.toggleAuto = function() { NET.toggleAuto(); };
   window.stepTick = function() { NET.stepTick(); };
+  window.resumeRun = function() { NET.resumeRun(); };
   window.resetAll = function() { NET.resetAll(); };
 
   // ---- Tastatur ----
@@ -497,6 +609,9 @@
     }
     if (e.key === ' ' && e.target === document.body) {
       e.preventDefault(); window.toggleAuto();
+    }
+    if ((e.key === 'p' || e.key === 'P') && e.target !== document.getElementById('cmdInput')) {
+      window.resumeRun();
     }
   });
 
@@ -527,8 +642,8 @@
 
   // ---- Start ----
   NET.init();
-  console.log('👑 IKI1UC · NET.work · Königliche Atom‑Index geladen');
-  console.log('⌨️  Leertaste = Auto, Enter = Befehl');
+  console.log('👑 IKI1UC · NET.work · Königliche Atom‑Index geladen (v2, Freeze-Bug gefixt)');
+  console.log('⌨️  Leertaste = Auto, Enter = Befehl, p = Weiter (aus Pause raus)');
 </script>
 </body>
 </html>

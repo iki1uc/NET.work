@@ -1,649 +1,216 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>👑 IKI1UC · NET.work · Königliche Atom‑Index (Universalis)</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: #0a0a12;
-      color: #d0d9e6;
-      font-family: 'Consolas', monospace;
-      padding: 16px;
-      min-height: 100vh;
-      background: radial-gradient(ellipse at 20% 30%, #0c0c1a, #000);
-    }
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      border-bottom: 2px solid #ffd700;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-    }
-    .header h1 {
-      font-size: 26px;
-      letter-spacing: 4px;
-      background: linear-gradient(90deg, #ffd700, #66ccff, #ff66ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .header .sub {
-      font-size: 11px;
-      color: #3d5a70;
-      letter-spacing: 2px;
-      -webkit-text-fill-color: #3d5a70;
-    }
-    .status-led {
-      display: flex;
-      gap: 16px;
-      font-size: 11px;
-    }
-    .led {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-right: 4px;
-    }
-    .led.green { background: #4f4; box-shadow: 0 0 8px #4f4; }
-    .led.yellow { background: #ffa; box-shadow: 0 0 8px #ffa; }
-    .led.red { background: #f66; box-shadow: 0 0 8px #f66; }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 600px) { .grid-3 { grid-template-columns: 1fr; } }
-
-    .card {
-      background: rgba(10,10,20,0.75);
-      border: 1px solid #1a1a2a;
-      border-radius: 12px;
-      padding: 16px;
-      backdrop-filter: blur(4px);
-      transition: border-color 0.3s;
-    }
-    .card:hover { border-color: #ffd70055; }
-    .card h2 {
-      color: #ffd700;
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 6px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .card h2 .badge {
-      font-size: 9px;
-      background: #1a1a2a;
-      padding: 2px 10px;
-      border-radius: 20px;
-      color: #888;
-    }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-    }
-    .metric {
-      background: #0e0e1a;
-      border-radius: 4px;
-      padding: 4px 8px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-    }
-    .metric .label { color: #666; }
-    .metric .value { font-weight: bold; }
-    .value.gold { color: #ffd700; }
-    .value.cyan { color: #66ccff; }
-    .value.pink { color: #ff66ff; }
-    .value.green { color: #4f4; }
-    .value.orange { color: #ff8c00; }
-
-    .deutung {
-      background: rgba(10,10,20,0.7);
-      border: 1px solid #1a1a2a;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
-    .deutung h2 {
-      color: #ffd700;
-      font-size: 13px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 6px;
-      margin-bottom: 8px;
-    }
-    #log {
-      background: #06060a;
-      border-radius: 6px;
-      padding: 10px;
-      font-size: 10px;
-      max-height: 120px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      color: #88ddbb;
-      border: 1px solid #1a1a2a;
-      line-height: 1.6;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      background: rgba(10,10,20,0.5);
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #1a1a2a;
-      align-items: center;
-    }
-    .controls button {
-      background: #111;
-      color: #d0d9e6;
-      border: 1px solid #333;
-      padding: 6px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 10px;
-      transition: 0.2s;
-    }
-    .controls button:hover { border-color: #ffd700; background: #1a1a2a; }
-    .controls button.primary { border-color: #ffd700; color: #ffd700; }
-    .controls button.primary:hover { background: #ffd700; color: #000; }
-    .controls button.attack { border-color: #ff8c00; color: #ff8c00; }
-    .controls button.attack:hover { background: #ff8c00; color: #000; }
-    .controls button.resume { border-color: #4f4; color: #4f4; }
-    .controls button.resume:hover { background: #4f4; color: #000; }
-    .controls input {
-      background: #1e242c;
-      border: 1px solid #2f3542;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 10px;
-      flex: 1;
-      min-width: 140px;
-    }
-    .controls input::placeholder { color: #445555; }
-
-    .footer {
-      margin-top: 20px;
-      padding: 8px 12px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 6px;
-      font-size: 9px;
-      color: #445555;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .footer .gold { color: #ffd700; }
-
-    .matrix-visual {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 6px 0;
-    }
-    .matrix-row {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 4px 0;
-    }
-    .matrix-node {
-      background: #0a0a0a;
-      padding: 4px 14px;
-      border-radius: 6px;
-      border: 1px solid #3d5a70;
-      color: #ffd700;
-      font-weight: bold;
-      min-width: 50px;
-      text-align: center;
-    }
-    .matrix-arrow { color: #0ff; font-size: 16px; }
-    .matrix-label { font-size: 9px; color: #3d5a70; margin-top: 2px; }
-
-    /* ===== NET.work HUB (neu) ===== */
-    .hub-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 900px) { .hub-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 500px) { .hub-grid { grid-template-columns: 1fr; } }
-    .hub-node {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      background: #0e0e1a;
-      border: 1px solid #1a1a2a;
-      border-radius: 8px;
-      padding: 10px 12px;
-      text-decoration: none;
-      color: #d0d9e6;
-      transition: 0.2s;
-    }
-    .hub-node:hover { border-color: #ffd700; background: #14141f; }
-    .hub-node .hub-icon { font-size: 18px; }
-    .hub-node .hub-name { font-weight: bold; font-size: 12px; color: #ffd700; }
-    .hub-node .hub-axis { font-size: 9px; color: #666; }
-    .hub-node .hub-status { font-size: 9px; margin-top: 2px; }
-    .hub-node .hub-status.unknown { color: #665; }
-  </style>
+<meta charset="UTF-8" />
+<title>IKI1UC · PHYSICS ENGINE · WORLD HUB</title>
+<style>
+  body {
+    margin:0; padding:0;
+    background:#050510;
+    color:#d0d9e6;
+    font-family:Consolas, monospace;
+    overflow:hidden;
+  }
+  #ui {
+    position:absolute;
+    top:0; left:0;
+    width:360px;
+    height:100vh;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(6px);
+    border-right:1px solid #222;
+    padding:16px;
+    overflow-y:auto;
+  }
+  h1 {
+    font-size:20px;
+    color:#ffd700;
+    margin-bottom:10px;
+  }
+  .axis {
+    margin-bottom:14px;
+    padding:10px;
+    border:1px solid #333;
+    border-radius:8px;
+    background:rgba(10,10,20,0.5);
+  }
+  .axis h2 {
+    margin:0 0 6px 0;
+    font-size:14px;
+    color:#ffd700;
+  }
+  .metric {
+    font-size:11px;
+    display:flex;
+    justify-content:space-between;
+    margin:2px 0;
+  }
+  #canvas {
+    position:absolute;
+    top:0; left:360px;
+    width:calc(100vw - 360px);
+    height:100vh;
+    background:#000;
+  }
+  .hub {
+    margin-top:20px;
+    padding:10px;
+    border:1px solid #333;
+    border-radius:8px;
+  }
+  .hub a {
+    display:block;
+    padding:6px;
+    margin:4px 0;
+    background:#111;
+    color:#ffd700;
+    text-decoration:none;
+    border-radius:4px;
+    font-size:11px;
+  }
+</style>
 </head>
 <body>
-<div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div>
-      <h1>👑 IKI1UC · NET.work</h1>
-      <div class="sub">Königliche Atom‑Index · 3‑9‑81 · Industrie 6.0 · Universalis</div>
-    </div>
-    <div class="status-led">
-      <span><span class="led green"></span> NET.online</span>
-      <span><span class="led green"></span> RESPO.master</span>
-      <span id="pause-led"><span class="led green" id="pause-dot"></span> <span id="pause-label">läuft</span></span>
-      <span id="sys-clock" style="color:#666;">⏱️ --:--</span>
-    </div>
+<div id="ui">
+  <h1>IKI1UC · PHYSICS ENGINE</h1>
+
+  <div class="axis">
+    <h2>🌍 WELT (3)</h2>
+    <div class="metric"><span>Router</span><span id="welt-router">aktiv</span></div>
+    <div class="metric"><span>Stage</span><span id="welt-stage">3D</span></div>
+    <div class="metric"><span>Plugins</span><span id="welt-plugins">13</span></div>
+    <div class="metric"><span>Badges</span><span id="welt-badges">0</span></div>
   </div>
 
-  <!-- DREI ACHSEN -->
-  <div class="grid-3">
-    <div class="card">
-      <h2>🌍 WELT <span class="badge">3</span></h2>
-      <div class="metric-grid">
-        <div class="metric"><span class="label">Router</span><span class="value gold" id="welt-router">aktiv</span></div>
-        <div class="metric"><span class="label">Stage</span><span class="value cyan" id="welt-stage">3D</span></div>
-        <div class="metric"><span class="label">Plugins</span><span class="value pink" id="welt-plugins">13</span></div>
-        <div class="metric"><span class="label">Badges</span><span class="value orange" id="welt-badges">0</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>⚡ KRAFT <span class="badge">9</span></h2>
-      <div class="metric-grid">
-        <div class="metric"><span class="label">Queue</span><span class="value cyan" id="kraft-queue">0</span></div>
-        <div class="metric"><span class="label">ZEN</span><span class="value gold" id="kraft-zen">bereit</span></div>
-        <div class="metric"><span class="label">Dispatcher</span><span class="value green" id="kraft-input">aktiv</span></div>
-        <div class="metric"><span class="label">Befehle</span><span class="value orange" id="kraft-cmds">0</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>🧬 LEBEN <span class="badge">81</span></h2>
-      <div class="metric-grid">
-        <div class="metric"><span class="label">Zellen</span><span class="value pink" id="leben-zellen">81</span></div>
-        <div class="metric"><span class="label">Tick</span><span class="value gold" id="leben-tick">0</span></div>
-        <div class="metric"><span class="label">Vital</span><span class="value green" id="leben-vital">0.00</span></div>
-        <div class="metric"><span class="label">Drift</span><span class="value cyan" id="leben-drift">0.00</span></div>
-      </div>
-    </div>
+  <div class="axis">
+    <h2>⚡ KRAFT (9)</h2>
+    <div class="metric"><span>Queue</span><span id="kraft-queue">0</span></div>
+    <div class="metric"><span>ZEN</span><span id="kraft-zen">bereit</span></div>
+    <div class="metric"><span>Dispatcher</span><span id="kraft-dis">aktiv</span></div>
+    <div class="metric"><span>Befehle</span><span id="kraft-cmds">0</span></div>
   </div>
 
-  <!-- MATRIX VISUAL -->
-  <div class="deutung" style="border-color:#ffd70044;">
-    <h2>🧮 3hit90 · MATRIX <span style="font-size:9px;color:#3d5a70;font-weight:400;">(lebt jetzt mit jedem Tick)</span></h2>
-    <div class="matrix-visual">
-      <div class="matrix-row">
-        <span class="matrix-node" id="m81">81</span>
-        <span class="matrix-arrow">→</span>
-        <span class="matrix-node" id="m243">243</span>
-        <span class="matrix-arrow">→</span>
-        <span class="matrix-node" id="m729">729</span>
-      </div>
-      <div class="matrix-label" id="formulaDisplay">3 × (0 ÷ 6) × 90 = 0</div>
-    </div>
+  <div class="axis">
+    <h2>🧬 LEBEN (81)</h2>
+    <div class="metric"><span>Zellen</span><span id="leben-zellen">81</span></div>
+    <div class="metric"><span>Tick</span><span id="leben-tick">0</span></div>
+    <div class="metric"><span>Vital</span><span id="leben-vital">0.50</span></div>
+    <div class="metric"><span>Drift</span><span id="leben-drift">0.10</span></div>
   </div>
 
-  <!-- NET.work HUB (neu) -->
-  <div class="deutung" style="border-color:#66ccff44;">
-    <h2 style="color:#66ccff;">🕸️ NET.work · HUB <span style="font-size:9px;color:#3d5a70;font-weight:400;">Königsknoten → Module</span></h2>
-    <div class="hub-grid" id="hubGrid"></div>
-    <div style="font-size:9px;color:#445555;margin-top:8px;">
-      Links gehen relativ von dieser Datei aus. Ein Modul ist "erreichbar", wenn die Datei im selben Ordner liegt — sonst zeigt der Browser normal einen 404. Das ist reine Navigation, keine simulierte Verbindung.
-    </div>
+  <div class="axis">
+    <h2>Φ4 · MYSTERY</h2>
+    <div class="metric"><span>Chaos</span><span id="myst-chaos">0.00</span></div>
+    <div class="metric"><span>Order</span><span id="myst-order">0.00</span></div>
+    <div class="metric"><span>Φ4</span><span id="myst-phi">0.00</span></div>
   </div>
 
-  <!-- LOG / DEUTUNG -->
-  <div class="deutung">
-    <h2>📖 DEUTUNG · Netz‑Log</h2>
-    <div id="log">▶ IKI1UC · NET.work · Königliche Atom‑Index bereit …</div>
+  <div class="hub">
+    <h2>🕸️ NET.work · HUB</h2>
+    <a href="home.net.html" target="_blank">🏠 ZOLL · HOME</a>
+    <a href="koop.net.html" target="_blank">🤝 KOOP · NET</a>
+    <a href="move.lan.html" target="_blank">🚚 MOVE · LAN</a>
+    <a href="my.LAN.USE.html" target="_blank">👤 USER · LAN</a>
+    <a href="wetter.wlan.html" target="_blank">🌦️ WETTER · WLAN</a>
+    <a href="soccer.mylan.html" target="_blank">⚽ SOCCER · MYLAN</a>
+    <a href="axiom.net.html" target="_blank">📐 AXIOM · NET</a>
   </div>
-
-  <!-- STEUERUNG -->
-  <div class="controls">
-    <input id="cmdInput" placeholder="SHOCK / WAVE / LINK / PUSH / GROW / MOVE / BREAK" />
-    <button class="attack" onclick="sendCmd()">⚡ SENDEN</button>
-    <button class="primary" onclick="toggleAuto()">▶ AUTO</button>
-    <button onclick="stepTick()">⏭ SCHRITT</button>
-    <button class="resume" onclick="resumeRun()">▶ WEITER</button>
-    <button onclick="resetAll()">⟲ RESET</button>
-    <span style="color:#666;font-size:9px;">Speed:</span>
-    <input type="range" id="speedSlider" min="1" max="10" value="3" style="width:80px;background:#1e242c;" />
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer">
-    <span>🧬 IKI1UC · <span class="gold">NET.work</span></span>
-    <span>⚡ 3‑9‑81 · Industrie 6.0</span>
-    <span>⌨️  Leertaste = Auto‑Toggle · Enter = Befehl · p = Weiter</span>
-  </div>
-
 </div>
 
+<canvas id="canvas"></canvas>
+
 <script>
-  // ================================================================
-  // IKI1UC · NET.work — Königliche Atom‑Engine (v2 · Universalis)
-  //
-  // Bugfixes gegenüber der Ursprungsversion:
-  //
-  // 1) FREEZE-BUG: stepTick() setzte paused=true und rief DANACH
-  //    tickStep() auf, das bei paused=true sofort abbricht. Der
-  //    SCHRITT-Button hat also nie wirklich getickt UND das System
-  //    für immer eingefroren (kein Button setzte paused wieder auf
-  //    false). Fix: tickStep(force) kann den paused-Check jetzt
-  //    gezielt übergehen, und ein neuer "▶ WEITER"-Button (plus
-  //    Taste "p") setzt paused wieder zurück.
-  //
-  // 2) RESET setzte paused nicht zurück → nach dem Freeze blieb
-  //    das System auch nach RESET eingefroren. Jetzt: resetAll()
-  //    setzt paused=false.
-  //
-  // 3) Die Matrix (81→243→729) wurde nur einmal bei init() mit
-  //    Input 0 berechnet; calcMatrix() existierte, wurde aber nie
-  //    aufgerufen. Die Anzeige war dauerhaft "3 × 0 × 90 = 0".
-  //    Fix: calcMatrix() wird jetzt am Ende jedes tickStep()
-  //    aufgerufen, die Matrix lebt jetzt wirklich mit.
-  //
-  // NEU: NET.work-HUB — Navigationskarten zu den anderen genannten
-  // Modulen (home.net.html, koop.net.html, move.lan.html,
-  // my.LAN.USE.html, wetter.wlan.html, soccer.mylan.html,
-  // axiom.net.html). Das sind einfache <a>-Links, keine simulierte
-  // Anbindung — ich kenne den Inhalt dieser Dateien nicht, daher
-  // wird hier nichts über sie behauptet oder aus ihnen geladen.
-  // ================================================================
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
 
-  const HUB_MODULES = [
-    { file: 'home.net.html',    name: 'HOME',    axis: '.net',  icon: '🏠' },
-    { file: 'koop.net.html',    name: 'KOOP',    axis: '.net',  icon: '🤝' },
-    { file: 'move.lan.html',    name: 'MOVE',    axis: '.lan',  icon: '🚀' },
-    { file: 'my.LAN.USE.html', name: 'LAN.USE',  axis: '.lan',  icon: '🧩' },
-    { file: 'wetter.wlan.html', name: 'WETTER',  axis: '.wlan', icon: '⛅' },
-    { file: 'soccer.mylan.html', name: 'SOCCER', axis: '.mylan', icon: '⚽' },
-    { file: 'axiom.net.html',  name: 'AXIOM',    axis: '.net',  icon: '📐' }
-  ];
+const NET = {
+  tick:0,
+  paused:false,
+  auto:true,
 
-  const NET = {
-    tick: 0,
-    paused: false,
-    auto: false,
-    speed: 3,
+  welt:{router:"aktiv",stage:"3D",plugins:13,badges:0},
+  kraft:{queue:0,zen:"bereit",dispatcher:"aktiv",cmds:0},
+  leben:{zellen:81,tick:0,vital:0.5,drift:0.1},
 
-    welt: { router: 'aktiv', stage: '3D', plugins: 13, badges: 0 },
-    kraft: { queue: 0, zen: 'bereit', dispatcher: 'aktiv', cmds: 0 },
-    leben: { zellen: 81, tick: 0, vital: 0.5, drift: 0.1 },
+  mystery:{chaos:0,order:0,phi:0},
 
-    matrix: { atom: 81, uni: 243, run: 729 },
-    commands: [],
-    log: [],
-    maxLog: 50,
+  orbit:{
+    x:canvas.width/2,
+    y:canvas.height/2,
+    r:120,
+    angle:0,
+    speed:0.01
+  },
 
-    init() {
-      this.logMsg('👑 IKI1UC · NET.work · Königliche Atom‑Index gestartet (v2, Freeze-Bug gefixt)');
-      this.logMsg('💡 Befehle: SHOCK, WAVE, LINK, PUSH, GROW, MOVE, BREAK');
-      this.updateUI();
-      this.updateMatrix(0);
-      this.updatePauseLED();
-      this.renderHub();
-    },
+  updateUI(){
+    document.getElementById("welt-badges").textContent = NET.welt.badges;
+    document.getElementById("kraft-queue").textContent = NET.kraft.queue.toFixed(1);
+    document.getElementById("kraft-cmds").textContent = NET.kraft.cmds;
+    document.getElementById("leben-tick").textContent = NET.leben.tick;
+    document.getElementById("leben-vital").textContent = NET.leben.vital.toFixed(2);
+    document.getElementById("leben-drift").textContent = NET.leben.drift.toFixed(2);
+    document.getElementById("myst-chaos").textContent = NET.mystery.chaos.toFixed(2);
+    document.getElementById("myst-order").textContent = NET.mystery.order.toFixed(2);
+    document.getElementById("myst-phi").textContent = NET.mystery.phi.toFixed(2);
+  },
 
-    renderHub() {
-      const grid = document.getElementById('hubGrid');
-      grid.innerHTML = HUB_MODULES.map(m => `
-        <a class="hub-node" href="${m.file}" target="_blank" rel="noopener">
-          <span class="hub-icon">${m.icon}</span>
-          <span class="hub-name">${m.name}</span>
-          <span class="hub-axis">${m.axis} · ${m.file}</span>
-          <span class="hub-status unknown">○ Status unbekannt (Datei nicht geprüft)</span>
-        </a>
-      `).join('');
-    },
+  tickStep(){
+    if(NET.paused) return;
 
-    // fix #1: force-Parameter erlaubt einen echten Tick trotz paused
-    tickStep(force) {
-      if (this.paused && !force) return;
-      this.tick++;
-      this.leben.tick = this.tick;
-      this.leben.vital = 0.5 + 0.3 * Math.sin(this.tick * 0.05);
-      this.leben.drift = 0.1 + 0.05 * Math.cos(this.tick * 0.07);
-      this.kraft.zen = this.tick % 10 < 3 ? '⚡ aktiv' : 'bereit';
-      this.kraft.queue = Math.max(0, this.kraft.queue - 0.2);
-      this.welt.badges = Math.floor(this.tick / 20) % 10;
+    NET.tick++;
+    NET.leben.tick = NET.tick;
 
-      if (this.commands.length > 0) {
-        const cmd = this.commands.shift();
-        this.processCmd(cmd);
-      }
-      this.updateUI();
-      this.calcMatrix(); // fix #3: Matrix lebt jetzt mit jedem Tick mit
-    },
+    NET.leben.vital = 0.5 + 0.3*Math.sin(NET.tick*0.05);
+    NET.leben.drift = 0.1 + 0.05*Math.cos(NET.tick*0.07);
 
-    processCmd(cmd) {
-      const u = cmd.toUpperCase();
-      this.logMsg(`⚡ Befehl: ${u}`);
-      this.kraft.cmds++;
-      if (u.includes('SHOCK')) {
-        this.kraft.queue += 5;
-        this.leben.vital = Math.min(1, this.leben.vital + 0.1);
-        this.logMsg('💥 SHOCK → Queue +5, Vital +0.1');
-      } else if (u.includes('WAVE')) {
-        this.kraft.queue += 3;
-        this.leben.drift += 0.05;
-        this.logMsg('🌊 WAVE → Drift +0.05');
-      } else if (u.includes('LINK')) {
-        this.welt.badges = Math.min(20, this.welt.badges + 3);
-        this.logMsg('🔗 LINK → Badges +3');
-      } else if (u.includes('PUSH')) {
-        this.kraft.queue = Math.max(0, this.kraft.queue - 2);
-        this.logMsg('📌 PUSH → Queue -2');
-      } else if (u.includes('GROW')) {
-        this.leben.zellen = Math.min(243, this.leben.zellen + 10);
-        this.logMsg('🌱 GROW → Zellen +10');
-      } else if (u.includes('MOVE')) {
-        this.leben.drift = Math.max(0, this.leben.drift - 0.03);
-        this.logMsg('🚀 MOVE → Drift -0.03');
-      } else if (u.includes('BREAK')) {
-        this.kraft.queue = 0;
-        this.leben.vital = 0.3;
-        this.logMsg('💔 BREAK → Queue 0, Vital 0.3');
-      } else {
-        this.logMsg(`⚠️ Unbekannt: ${u}`);
-      }
-      this.updateUI();
-    },
+    NET.kraft.queue = Math.max(0, NET.kraft.queue - 0.1);
+    NET.welt.badges = (NET.tick % 20);
 
-    updateMatrix(input) {
-      const hits = Math.floor(input / 6);
-      const val = 3 * hits * 90;
-      this.matrix.atom = val * 81;
-      this.matrix.uni = val * 243;
-      this.matrix.run = val * 729;
-      document.getElementById('m81').textContent = this.matrix.atom.toFixed(0);
-      document.getElementById('m243').textContent = this.matrix.uni.toFixed(0);
-      document.getElementById('m729').textContent = this.matrix.run.toFixed(0);
-      document.getElementById('formulaDisplay').textContent = `3 × ${hits} × 90 = ${val}`;
-    },
+    NET.mystery.chaos = Math.random()*0.5;
+    NET.mystery.order = 1 - NET.mystery.chaos;
+    NET.mystery.phi = (NET.leben.vital * NET.mystery.order) - NET.leben.drift;
 
-    updateUI() {
-      document.getElementById('welt-router').textContent = this.welt.router;
-      document.getElementById('welt-stage').textContent = this.welt.stage;
-      document.getElementById('welt-plugins').textContent = this.welt.plugins;
-      document.getElementById('welt-badges').textContent = this.welt.badges;
-      document.getElementById('kraft-queue').textContent = this.kraft.queue.toFixed(1);
-      document.getElementById('kraft-zen').textContent = this.kraft.zen;
-      document.getElementById('kraft-input').textContent = this.kraft.dispatcher;
-      document.getElementById('kraft-cmds').textContent = this.kraft.cmds;
-      document.getElementById('leben-zellen').textContent = this.leben.zellen;
-      document.getElementById('leben-tick').textContent = this.leben.tick;
-      document.getElementById('leben-vital').textContent = this.leben.vital.toFixed(2);
-      document.getElementById('leben-drift').textContent = this.leben.drift.toFixed(2);
-    },
+    NET.updateUI();
+    NET.drawPhysics();
+  },
 
-    updatePauseLED() {
-      const dot = document.getElementById('pause-dot');
-      const label = document.getElementById('pause-label');
-      dot.className = 'led ' + (this.paused ? 'red' : 'green');
-      label.textContent = this.paused ? 'eingefroren' : 'läuft';
-    },
+  drawPhysics(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    logMsg(msg) {
-      const time = new Date().toLocaleTimeString();
-      this.log.push({ time, msg });
-      if (this.log.length > this.maxLog) this.log.shift();
-      this.renderLog();
-    },
+    const o = NET.orbit;
+    o.angle += o.speed + NET.leben.drift*0.01;
 
-    renderLog() {
-      const out = document.getElementById('log');
-      out.innerHTML = this.log.map(e => `[${e.time}] ${e.msg}`).join('\n');
-      out.scrollTop = out.scrollHeight;
-    },
+    const px = o.x + Math.cos(o.angle)*o.r;
+    const py = o.y + Math.sin(o.angle)*o.r;
 
-    sendCmd(cmd) {
-      if (!cmd) {
-        const input = document.getElementById('cmdInput');
-        cmd = input.value.trim();
-        if (!cmd) return;
-        input.value = '';
-      }
-      this.commands.push(cmd);
-    },
+    ctx.fillStyle="#ffd700";
+    ctx.beginPath();
+    ctx.arc(o.x,o.y,20,0,Math.PI*2);
+    ctx.fill();
 
-    // fix #1: STEP tickt jetzt WIRKLICH (force=true), pausiert
-    // danach bewusst, damit man Schritt für Schritt weitergehen kann
-    stepTick() {
-      this.paused = true;
-      this.logMsg('⏭ Schritt (danach pausiert)');
-      this.updatePauseLED();
-      this.tickStep(true);
-    },
+    ctx.strokeStyle="#333";
+    ctx.beginPath();
+    ctx.arc(o.x,o.y,o.r,0,Math.PI*2);
+    ctx.stroke();
 
-    // neu: expliziter Weg, aus dem pausierten Zustand rauszukommen,
-    // ohne gleich AUTO starten zu müssen
-    resumeRun() {
-      this.paused = false;
-      this.logMsg('▶ Weiter (nicht mehr pausiert)');
-      this.updatePauseLED();
-    },
+    ctx.fillStyle="#66ccff";
+    ctx.beginPath();
+    ctx.arc(px,py,12,0,Math.PI*2);
+    ctx.fill();
 
-    resetAll() {
-      this.tick = 0;
-      this.kraft.queue = 0;
-      this.kraft.cmds = 0;
-      this.leben.zellen = 81;
-      this.leben.vital = 0.5;
-      this.leben.drift = 0.1;
-      this.welt.badges = 0;
-      this.commands = [];
-      this.log = [];
-      this.paused = false; // fix #2: Reset hebt auch das Einfrieren auf
-      this.logMsg('⟲ ALLES zurückgesetzt (inkl. Pause-Zustand)');
-      this.updateUI();
-      this.updateMatrix(0);
-      this.updatePauseLED();
-    },
-
-    toggleAuto() {
-      this.auto = !this.auto;
-      if (this.auto) this.paused = false; // AUTO hebt eine vorherige Pause mit auf
-      this.logMsg(this.auto ? '▶ AUTO an' : '⏸ AUTO aus');
-      this.updatePauseLED();
-      if (this.auto) {
-        const speed = parseInt(document.getElementById('speedSlider').value) || 3;
-        this.speed = speed;
-        if (this._autoInt) clearInterval(this._autoInt);
-        const delay = Math.max(200, 2000 / speed);
-        this._autoInt = setInterval(() => {
-          if (this.auto && !this.paused) this.tickStep();
-        }, delay);
-      } else {
-        if (this._autoInt) { clearInterval(this._autoInt); this._autoInt = null; }
-      }
-    },
-
-    calcMatrix() {
-      const input = this.kraft.cmds + this.kraft.queue + this.welt.badges;
-      this.updateMatrix(input);
-    }
-  };
-
-  // ---- Globale Funktionen für Buttons ----
-  window.sendCmd = function() {
-    const input = document.getElementById('cmdInput');
-    const cmd = input.value.trim();
-    if (cmd) NET.sendCmd(cmd);
-  };
-  window.toggleAuto = function() { NET.toggleAuto(); };
-  window.stepTick = function() { NET.stepTick(); };
-  window.resumeRun = function() { NET.resumeRun(); };
-  window.resetAll = function() { NET.resetAll(); };
-
-  // ---- Tastatur ----
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && document.activeElement === document.getElementById('cmdInput')) {
-      window.sendCmd(); e.preventDefault();
-    }
-    if (e.key === ' ' && e.target === document.body) {
-      e.preventDefault(); window.toggleAuto();
-    }
-    if ((e.key === 'p' || e.key === 'P') && e.target !== document.getElementById('cmdInput')) {
-      window.resumeRun();
-    }
-  });
-
-  // ---- Speed Slider ----
-  document.getElementById('speedSlider').addEventListener('input', function() {
-    const speed = parseInt(this.value) || 3;
-    NET.speed = speed;
-    if (NET.auto) {
-      if (NET._autoInt) { clearInterval(NET._autoInt); NET._autoInt = null; }
-      const delay = Math.max(200, 2000 / speed);
-      NET._autoInt = setInterval(() => {
-        if (NET.auto && !NET.paused) NET.tickStep();
-      }, delay);
-    }
-  });
-
-  // ---- Uhr ----
-  function updateClock() {
-    document.getElementById('sys-clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+    ctx.strokeStyle="#ff66ff";
+    ctx.beginPath();
+    ctx.moveTo(o.x,o.y);
+    ctx.lineTo(px,py);
+    ctx.stroke();
   }
-  setInterval(updateClock, 1000);
-  updateClock();
+};
 
-  // ---- Hintergrund-Tick ----
-  setInterval(() => {
-    if (!NET.auto && !NET.paused) NET.tickStep();
-  }, 700);
-
-  // ---- Start ----
-  NET.init();
-  console.log('👑 IKI1UC · NET.work · Königliche Atom‑Index geladen (v2, Freeze-Bug gefixt)');
-  console.log('⌨️  Leertaste = Auto, Enter = Befehl, p = Weiter (aus Pause raus)');
+setInterval(()=>NET.tickStep(),50);
 </script>
+
 </body>
 </html>
